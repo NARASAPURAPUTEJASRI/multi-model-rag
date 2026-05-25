@@ -1,0 +1,89 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #eef5ff;
+}
+
+.container {
+  width: 80%;
+  margin: 40px auto;
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.15);
+}
+
+h1 {
+  text-align: center;
+  color: #1d3557;
+}
+
+.search-box {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 25px;
+}
+
+input {
+  flex: 1;
+  padding: 12px;
+  font-size: 16px;
+  border: 1px solid #aaa;
+  border-radius: 8px;
+}
+
+button {
+  padding: 12px 20px;
+  background: #1d3557;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #457b9d;
+}
+
+.response-box {
+  margin-top: 20px;
+}
+
+.answer-card {
+  background: #f8f9fa;
+  padding: 18px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+
+.media-card {
+  background: #f8f9fa;
+  padding: 15px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+
+img {
+  max-width: 350px;
+  border-radius: 10px;
+  display: block;
+  margin-bottom: 10px;
+}
+
+video {
+  max-width: 500px;
+  border-radius: 10px;
+  display: block;
+  margin-bottom: 10px;
+}
+
+audio {
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+.loading {
+  color: #e63946;
+  font-weight: bold;
+  margin-bottom: 15px;
+}

@@ -1,0 +1,12 @@
+fastapi
+uvicorn
+python-dotenv
+google-generativeai
+chromadb
+rank-bm25
+wikipedia-api
+requests
+beautifulsoup4
+numpy
+pydantic
+python-multipart
