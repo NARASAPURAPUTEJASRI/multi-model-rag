@@ -302,35 +302,181 @@ Cold start triggered
 
 ## 10. Evaluation Metrics
 
-Evaluation is separate from retrieval threshold.
+The evaluation system measures how well the multimodal RAG pipeline performs after the final response is generated.
 
-It runs after:
+Evaluation is completely separate from retrieval and cold start logic.
 
-retrieval → answer generation → final response
+Pipeline flow:
 
-It does not control cold start.
+Retrieval
 
-## Math-Based Metrics
-| Metric             | Purpose                                                            |
-| Context Precision  | Checks how many retrieved contexts are relevant to query entities. |
-        
+→ Reranking
 
-These are calculated using formulas.
+→ Relevance Filtering
 
-## LLM-Based Metrics
-| Metric             | Purpose                                                 |
-| ------------------ | ------------------------------------------------------- |
-| Answer Relevancy   | Checks whether answer addresses the query.              |
+→ Response Generation
 
+→ Evaluation
 
+Evaluation does not affect:
 
-These are evaluated by Gemini 2.5 Flash as a judge.
+vector retrieval
 
-Evaluation appears only in backend logs:
+BM25 retrieval
 
-Evaluation metrics | final_correctness=93.99 | answer_relevancy=100 ...
+RRF merging
 
-It is not shown in frontend.
+entity boosting
+
+threshold filtering
+
+cold start triggering
+
+Cold start decisions use only retrieval scores and thresholds.
+
+Evaluation metrics are logged only in backend logs and are not displayed in the frontend UI.
+
+Example backend log:
+
+Evaluation metrics | metrics={
+
+  'context_precision': 0.86,
+  
+  'modality_correctness': 1.0,
+  
+  'answer_relevancy': 0.91,
+  
+  'final_correctness_score': 0.91,
+  
+  'retrieved_count': 7,
+  
+  'response_type': 'text'
+  
+  }
+  
+Context Precision
+
+Context Precision measures how many retrieved results are relevant to the user query.
+
+The system:
+
+extracts important query entities
+
+compares them with retrieved results
+
+calculates the relevance ratio
+
+Formula:
+
+context_precision =
+
+relevant_retrieved_results / total_retrieved_results
+
+Example:
+
+retrieved_results = 10
+
+relevant_results = 8
+
+context_precision = 0.8
+
+This metric evaluates retrieval quality.
+
+Modality Correctness
+
+Modality Correctness checks whether the response type matches the detected user intent.
+
+Examples:
+
+image query → only image results
+
+audio query → only audio result
+
+video query → only video result
+
+text query → text answer with related media
+
+Scoring:
+
+Correct modality response = 1.0
+
+Wrong modality response = 0.0
+
+This metric evaluates response routing correctness.
+
+Answer Relevancy
+
+Answer Relevancy checks whether the generated answer correctly addresses the user query.
+
+This metric is evaluated using Gemini 2.5 Flash as an LLM judge.
+
+The evaluation model receives:
+
+user query
+
+generated answer
+
+and returns a score between:
+
+0.0 → irrelevant answer
+
+0.5 → partially relevant
+
+1.0 → highly relevant answer
+
+This metric is used only for text-based responses.
+
+Media-only responses do not use answer relevancy evaluation because they do not generate LLM text answers.
+
+Final Correctness Score
+
+The final correctness score combines:
+
+retrieval quality
+
+modality correctness
+
+answer quality
+
+For text queries:
+
+final_correctness_score =
+
+(0.4 × context_precision)
+
++ (0.3 × modality_correctness)
++ 
++ (0.3 × answer_relevancy)
+
+For image/audio/video queries:
+
+final_correctness_score =
+
+(0.6 × context_precision)
+
++ (0.4 × modality_correctness)
+
+LLM answer relevancy is not used for media-only responses.
+
+Evaluation Design Principles
+
+The evaluation system follows these principles:
+
+evaluation is independent from retrieval
+
+evaluation never controls cold start
+
+evaluation never changes retrieval ranking
+
+evaluation runs only after final response generation
+
+evaluation metrics are backend-only
+
+frontend never displays evaluation metrics
+
+media-only queries do not generate LLM text answers
+
+text queries evaluate both retrieval quality and answer quality
 
 ## 11. Complete Architecture
 
