@@ -3,15 +3,23 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
+from app.evaluation import evaluate_pipeline
 from app.logger import get_logger
 from app.intent import classify_intent
 from app.embeddings import embed_text
 from app.vector_store import vector_search
 from app.bm25_store import bm25_search, load_bm25_index
 from app.hybrid import reciprocal_rank_fusion
+from app.reranker import rerank_results_after_rrf, has_required_entity
 from app.cold_start import wikipedia_cold_start
 from app.response_router import route_response
-from app.config import SIMILARITY_THRESHOLD
+from app.config import (
+    TEXT_FINAL_THRESHOLD,
+    IMAGE_FINAL_THRESHOLD,
+    AUDIO_FINAL_THRESHOLD,
+    VIDEO_FINAL_THRESHOLD,
+    MIXED_FINAL_THRESHOLD,
+)
 
 log = get_logger("main")
 
@@ -39,65 +47,91 @@ def startup():
 
 
 def get_search_k(intent):
-    return 50 if intent in ["image", "audio", "video", "mixed"] else 15
+    if intent in ["image", "audio", "video", "mixed"]:
+        return 50
+    return 15
 
 
-def get_intent_threshold(intent):
+def get_final_threshold(intent):
     if intent == "text":
-        return SIMILARITY_THRESHOLD
+        return TEXT_FINAL_THRESHOLD
     if intent == "image":
-        return max(0.10, SIMILARITY_THRESHOLD - 0.10)
+        return IMAGE_FINAL_THRESHOLD
     if intent == "audio":
-        return max(0.08, SIMILARITY_THRESHOLD - 0.12)
+        return AUDIO_FINAL_THRESHOLD
     if intent == "video":
-        return max(0.08, SIMILARITY_THRESHOLD - 0.12)
+        return VIDEO_FINAL_THRESHOLD
     if intent == "mixed":
-        return max(0.10, SIMILARITY_THRESHOLD - 0.10)
-    return SIMILARITY_THRESHOLD
+        return MIXED_FINAL_THRESHOLD
+    return MIXED_FINAL_THRESHOLD
 
 
 def filter_results_by_intent(intent, results):
     if intent == "text":
-        return [r for r in results if r.get("metadata", {}).get("modality") == "text"]
-    if intent == "image":
-        return [r for r in results if r.get("metadata", {}).get("modality") == "image"]
-    if intent == "audio":
-        return [r for r in results if r.get("metadata", {}).get("modality") == "audio"]
-    if intent == "video":
-        return [r for r in results if r.get("metadata", {}).get("modality") == "video"]
+        return [
+            r for r in results
+            if r.get("metadata", {}).get("modality") in ["text", "image", "audio", "video"]
+        ]
+
+    if intent in ["image", "audio", "video"]:
+        return [
+            r for r in results
+            if r.get("metadata", {}).get("modality") == intent
+        ]
+
     return results
 
 
 def best_score(results):
-    scores = []
-    for r in results:
-        try:
-            scores.append(float(r.get("score", 0)))
-        except Exception:
-            pass
-    return max(scores) if scores else 0
+    if not results:
+        return 0.0
+
+    return max(float(r.get("score", 0)) for r in results)
 
 
-def should_cold_start(vector_results, filtered_results, threshold):
-    if not vector_results:
-        return True
+def apply_final_relevance_gate(query, intent, results, threshold):
+    accepted = []
+
+    for result in results:
+        score = float(result.get("score", 0))
+
+        if score < threshold:
+            continue
+
+        if intent in ["text","image", "audio", "video"]:
+            if not has_required_entity(query, result):
+                continue
+
+        accepted.append(result)
+
+    return accepted
+
+
+def should_cold_start(filtered_results, threshold):
     if not filtered_results:
         return True
+
     return best_score(filtered_results) < threshold
 
 
 @app.post("/chat")
 def chat(req: ChatRequest):
     query = req.query.strip()
+
     log.info("Query received | query=%s", query)
 
     intent = classify_intent(query)
     log.info("Intent detected | intent=%s", intent)
 
     search_k = get_search_k(intent)
-    threshold = get_intent_threshold(intent)
+    final_threshold = get_final_threshold(intent)
 
-    log.info("Search config | intent=%s | top_k=%s | threshold=%s", intent, search_k, threshold)
+    log.info(
+        "Search config | intent=%s | top_k=%s | final_threshold=%s",
+        intent,
+        search_k,
+        final_threshold,
+    )
 
     query_embedding = embed_text(query)
     log.info("Query embedding created")
@@ -109,6 +143,8 @@ def chat(req: ChatRequest):
     log.info("BM25 search completed | count=%s", len(bm25_results))
 
     merged_results = reciprocal_rank_fusion(vector_results, bm25_results)
+    merged_results = rerank_results_after_rrf(query, merged_results)
+
     filtered_results = filter_results_by_intent(intent, merged_results)
 
     log.info(
@@ -118,11 +154,28 @@ def chat(req: ChatRequest):
         best_score(filtered_results),
     )
 
-    if should_cold_start(vector_results, filtered_results, threshold):
-        log.info("Cold start needed | intent=%s", intent)
+    gated_results = apply_final_relevance_gate(
+        query=query,
+        intent=intent,
+        results=filtered_results,
+        threshold=final_threshold,
+    )
+
+    if should_cold_start(gated_results, final_threshold):
+        log.info(
+            "Cold start needed | intent=%s | gated_count=%s | best_score=%s | final_threshold=%s",
+            intent,
+            len(gated_results),
+            best_score(gated_results),
+            final_threshold,
+        )
 
         new_items = wikipedia_cold_start(query, intent)
-        log.info("Cold start completed | new_items=%s", len(new_items))
+
+        if new_items:
+            log.info("New unique data ingested from cold start | count=%s", len(new_items))
+        else:
+            log.info("Cold start completed but no new unique data found")
 
         vector_results = vector_search(query_embedding, top_k=search_k)
         log.info("Vector search rerun completed | count=%s", len(vector_results))
@@ -131,6 +184,8 @@ def chat(req: ChatRequest):
         log.info("BM25 search rerun completed | count=%s", len(bm25_results))
 
         merged_results = reciprocal_rank_fusion(vector_results, bm25_results)
+        merged_results = rerank_results_after_rrf(query, merged_results)
+
         filtered_results = filter_results_by_intent(intent, merged_results)
 
         log.info(
@@ -139,10 +194,34 @@ def chat(req: ChatRequest):
             len(filtered_results),
             best_score(filtered_results),
         )
-    else:
-        log.info("Cold start skipped | intent=%s", intent)
 
-    response = route_response(intent, query, filtered_results)
+        gated_results = apply_final_relevance_gate(
+            query=query,
+            intent=intent,
+            results=filtered_results,
+            threshold=final_threshold,
+        )
+
+    else:
+        log.info(
+            "Cold start skipped | intent=%s | gated_count=%s | best_score=%s",
+            intent,
+            len(gated_results),
+            best_score(gated_results),
+        )
+
+    if not gated_results:
+        log.info("No relevant final results found | intent=%s | query=%s", intent, query)
+
+    response = route_response(intent, query, gated_results)
+    
+    evaluate_pipeline(
+        query=query,
+        intent=intent,
+        results=gated_results,
+        response=response
+    )
+
     log.info("Response sent | type=%s", response.get("type"))
 
     return response

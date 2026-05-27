@@ -13,6 +13,8 @@ from app.dedupe_store import (
     mark_media_url_seen,
     is_text_seen,
     mark_text_seen,
+    is_file_hash_seen,
+    mark_file_hash_seen,
 )
 
 log = get_logger("cold_start")
@@ -22,7 +24,9 @@ AUDIO_LIMIT = 1
 VIDEO_LIMIT = 1
 MAX_FILE_CHECKS = 20
 
-HEADERS = {"User-Agent": "multimodal-rag-project/1.0"}
+HEADERS = {
+    "User-Agent": "multimodal-rag-project/1.0"
+}
 
 wiki = wikipediaapi.Wikipedia(
     user_agent="multimodal-rag-project/1.0",
@@ -38,12 +42,28 @@ def normalize_wiki_query(query: str):
     q = query.lower()
 
     remove_words = [
-        "tell me about", "explain", "what is", "who is",
-        "show me", "give me", "gave me",
-        "images", "image", "photos", "pictures",
-        "audio", "audios", "sound", "sounds", "voice",
-        "video", "videos", "clip", "clips",
-        "information about", "details about",
+        "tell me about",
+        "explain",
+        "what is",
+        "who is",
+        "show me",
+        "give me",
+        "gave me",
+        "images",
+        "image",
+        "photos",
+        "pictures",
+        "audio",
+        "audios",
+        "sound",
+        "sounds",
+        "voice",
+        "video",
+        "videos",
+        "clip",
+        "clips",
+        "information about",
+        "details about",
     ]
 
     for word in remove_words:
@@ -57,11 +77,20 @@ def safe_get(url, params=None, timeout=10, retries=3):
 
     for attempt in range(1, retries + 1):
         try:
-            response = requests.get(url, params=params, headers=HEADERS, timeout=timeout)
+            response = requests.get(
+                url,
+                params=params,
+                headers=HEADERS,
+                timeout=timeout,
+            )
 
             if response.status_code == 429:
                 wait_time = 5 * attempt
-                log.warning("Rate limit hit | attempt=%s | waiting=%s sec", attempt, wait_time)
+                log.warning(
+                    "Wikipedia rate limit hit | attempt=%s | waiting=%s sec",
+                    attempt,
+                    wait_time,
+                )
                 time.sleep(wait_time)
                 continue
 
@@ -90,7 +119,7 @@ def search_wikipedia_pages(query: str):
         "srlimit": 5,
     }
 
-    response = safe_get(url, params=params)
+    response = safe_get(url, params=params, timeout=10)
     data = response.json()
 
     return data.get("query", {}).get("search", [])
@@ -99,14 +128,20 @@ def search_wikipedia_pages(query: str):
 def select_best_page(query: str):
     clean_query = normalize_wiki_query(query)
 
-    log.info("Wikipedia search query normalized | original=%s | clean=%s", query, clean_query)
+    log.info(
+        "Wikipedia search query normalized | original=%s | clean=%s",
+        query,
+        clean_query,
+    )
 
     search_results = search_wikipedia_pages(clean_query)
 
     if not search_results:
+        log.warning("No Wikipedia search results | query=%s", clean_query)
         return None
 
     best_title = search_results[0]["title"]
+
     log.info("Wikipedia best page selected | title=%s", best_title)
 
     return wiki.page(best_title)
@@ -119,13 +154,16 @@ def select_relevant_sections(page, query):
     for section in page.sections:
         section_text = section.text or ""
         section_title = section.title or ""
+
         combined = (section_title + " " + section_text).lower()
 
         if any(word in combined for word in query_words):
-            selected.append({
-                "title": section_title,
-                "text": section_text,
-            })
+            selected.append(
+                {
+                    "title": section_title,
+                    "text": section_text,
+                }
+            )
 
     return selected[:3]
 
@@ -141,7 +179,7 @@ def get_wikipedia_files(page_title: str):
         "imlimit": 50,
     }
 
-    response = safe_get(url, params=params)
+    response = safe_get(url, params=params, timeout=10)
     data = response.json()
 
     pages = data.get("query", {}).get("pages", {})
@@ -149,7 +187,9 @@ def get_wikipedia_files(page_title: str):
 
     for page in pages.values():
         for item in page.get("images", []):
-            file_titles.append(item.get("title", ""))
+            title = item.get("title", "")
+            if title:
+                file_titles.append(title)
 
     return file_titles[:MAX_FILE_CHECKS]
 
@@ -165,13 +205,14 @@ def get_file_url(file_title: str):
         "format": "json",
     }
 
-    response = safe_get(url, params=params)
+    response = safe_get(url, params=params, timeout=10)
     data = response.json()
 
     pages = data.get("query", {}).get("pages", {})
 
     for page in pages.values():
         info = page.get("imageinfo", [])
+
         if info:
             return {
                 "url": info[0].get("url"),
@@ -183,7 +224,9 @@ def get_file_url(file_title: str):
 
 
 def split_files_by_modality(file_titles):
-    images, audios, videos = [], [], []
+    images = []
+    audios = []
+    videos = []
 
     for title in file_titles:
         lower = title.lower()
@@ -257,29 +300,57 @@ def ingest_media_group(media_items, modality, new_items, limit):
             break
 
         try:
-            media_url = item["url"]
+            media_url = item.get("url")
+
+            if not media_url:
+                continue
 
             if is_media_url_seen(media_url):
-                log.info("Skipping duplicate media | modality=%s | url=%s", modality, media_url)
+                log.info(
+                    "Skipping duplicate media URL | modality=%s | url=%s",
+                    modality,
+                    media_url,
+                )
                 continue
 
             file_path, frontend_url = download_media(media_url, modality)
 
+            if is_file_hash_seen(file_path):
+                log.info(
+                    "Skipping duplicate media file hash | modality=%s | file=%s",
+                    modality,
+                    file_path,
+                )
+
+                try:
+                    os.remove(file_path)
+                except Exception:
+                    pass
+
+                continue
+
             media_item = ingest_media(
                 file_path=file_path,
                 modality=modality,
-                caption=item["caption"],
+                caption=item.get("caption", ""),
                 url=frontend_url,
                 source_topic=item.get("source_topic", ""),
                 page_title=item.get("page_title", ""),
             )
 
             mark_media_url_seen(media_url)
+            mark_file_hash_seen(file_path)
+
             new_items.append(media_item)
             added += 1
 
         except Exception as e:
-            log.warning("%s ingestion failed | url=%s | error=%s", modality, item.get("url"), str(e))
+            log.warning(
+                "%s ingestion failed | url=%s | error=%s",
+                modality,
+                item.get("url"),
+                str(e),
+            )
 
 
 def wikipedia_cold_start(query, intent="text"):
@@ -329,13 +400,12 @@ def wikipedia_cold_start(query, intent="text"):
     elif intent == "video":
         ingest_media_group(media_groups["video"], "video", new_items, VIDEO_LIMIT)
 
-    elif intent == "mixed":
+    elif intent == "text":
         ingest_media_group(media_groups["image"], "image", new_items, IMAGE_LIMIT)
         ingest_media_group(media_groups["audio"], "audio", new_items, AUDIO_LIMIT)
         ingest_media_group(media_groups["video"], "video", new_items, VIDEO_LIMIT)
 
-    else:
-        log.info("Text intent detected, skipping media ingestion to reduce cold-start time")
+    
 
     add_items_to_bm25(new_items)
 
