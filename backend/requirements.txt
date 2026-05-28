@@ -1,12 +1,35 @@
+# FastAPI backend framework
 fastapi
+
+# ASGI server used to run FastAPI
 uvicorn
+
+# Loads environment variables from .env file
 python-dotenv
+
+# Gemini API library for embeddings and LLM calls
 google-generativeai
+
+# Vector database used for storing embeddings
 chromadb
+
+# BM25 keyword search library
 rank-bm25
+
+# Wikipedia API wrapper used for cold start
 wikipedia-api
+
+# HTTP requests library
 requests
+
+# HTML parsing library
 beautifulsoup4
+
+# Numerical computing library
 numpy
+
+# Data validation library used by FastAPI
 pydantic
+
+# Supports file upload/form data handling
 python-multipart

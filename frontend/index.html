@@ -1,24 +1,89 @@
+<!--
+index.html
+
+This file creates the frontend structure for the Multimodal RAG Pipeline.
+
+It contains:
+- Main page layout
+- Project heading
+- Short project subtitle
+- Query input box
+- Ask button
+- Loading message area
+- Response display area
+
+The frontend sends the user query to the FastAPI backend using script.js.
+-->
+
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Multimodal RAG</title>
+  <!-- Character encoding for browser -->
+  <meta charset="UTF-8" />
+
+  <!-- Makes page responsive on mobile and desktop -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+  <!-- Browser tab title -->
+  <title>Multimodal RAG Pipeline</title>
+
+  <!-- Link external CSS file -->
   <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
-  <div class="container">
-    <h1>Multimodal RAG Pipeline</h1>
+  <!-- Decorative background glow effect -->
+  <div class="background-glow"></div>
 
-    <div class="search-box">
-      <input id="queryInput" type="text" placeholder="Ask something..." />
-      <button onclick="askQuestion()">Ask</button>
+  <!-- Main page wrapper -->
+  <div class="main-wrapper">
+
+    <!-- Header / hero section -->
+    <div class="hero-section">
+
+      <!-- Main project title -->
+      <h1>Multimodal RAG Pipeline</h1>
+
+      <!-- Short project description -->
+      <p class="subtitle">
+        Search text, images, audio, and videos using AI-powered multimodal retrieval.
+      </p>
+
     </div>
 
-    <div id="loading" class="loading"></div>
+    <!-- Search input container -->
+    <div class="search-container">
 
+      <!-- Query input and Ask button row -->
+      <div class="search-box">
+
+        <!-- User enters query here -->
+        <input
+          id="queryInput"
+          type="text"
+          placeholder="Ask about anything..."
+        />
+
+        <!-- Calls askQuestion() function from script.js -->
+        <button onclick="askQuestion()">
+          Ask
+        </button>
+
+      </div>
+
+      <!-- Loading text appears here while backend is processing -->
+      <div id="loading" class="loading"></div>
+
+    </div>
+
+    <!-- Backend response is displayed here -->
     <div id="responseBox" class="response-box"></div>
+
   </div>
 
+  <!-- Link external JavaScript file -->
   <script src="script.js"></script>
+
 </body>
 </html>

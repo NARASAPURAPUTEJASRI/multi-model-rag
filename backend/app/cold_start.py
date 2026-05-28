@@ -1,3 +1,31 @@
+"""
+cold_start.py
+
+This file handles dynamic cold start ingestion using Wikipedia.
+
+Cold start is triggered when retrieved results are missing or weak.
+
+Responsibilities:
+- Normalize user query for Wikipedia search
+- Search Wikipedia pages
+- Select best matching page
+- Extract relevant text sections
+- Get Wikipedia media files
+- Split files into image/audio/video groups
+- Download media files
+- Avoid duplicate text/media ingestion
+- Ingest text and media into vector DB
+- Add ingested items to BM25 index
+
+Important:
+- Text query ingests text + image/audio/video if available.
+- Image query ingests only images.
+- Audio query ingests only audio.
+- Video query ingests only video.
+- Captions/descriptions are used for BM25.
+- Raw media files are used for media embeddings.
+"""
+
 import os
 import uuid
 import time
@@ -17,28 +45,37 @@ from app.dedupe_store import (
     mark_file_hash_seen,
 )
 
+# Logger for cold start process
 log = get_logger("cold_start")
 
+# Maximum number of media files to ingest per modality
 IMAGE_LIMIT = 2
 AUDIO_LIMIT = 1
 VIDEO_LIMIT = 1
+
+# Maximum number of Wikipedia files to inspect
 MAX_FILE_CHECKS = 20
 
+# User-Agent required for Wikipedia API requests
 HEADERS = {
     "User-Agent": "multimodal-rag-project/1.0"
 }
 
+# Wikipedia API client
 wiki = wikipediaapi.Wikipedia(
     user_agent="multimodal-rag-project/1.0",
     language="en"
 )
 
+# Supported media extensions
 IMAGE_EXTS = (".jpg", ".jpeg", ".png", ".webp")
 AUDIO_EXTS = (".mp3", ".wav", ".ogg", ".oga", ".flac", ".m4a")
 VIDEO_EXTS = (".mp4", ".mov", ".webm", ".ogv")
 
 
 def normalize_wiki_query(query: str):
+    # Removes intent words from query to improve Wikipedia search
+
     q = query.lower()
 
     remove_words = [
@@ -73,6 +110,8 @@ def normalize_wiki_query(query: str):
 
 
 def safe_get(url, params=None, timeout=10, retries=3):
+    # Makes HTTP request with retry handling
+
     last_error = None
 
     for attempt in range(1, retries + 1):
@@ -84,6 +123,7 @@ def safe_get(url, params=None, timeout=10, retries=3):
                 timeout=timeout,
             )
 
+            # Handle rate limiting
             if response.status_code == 429:
                 wait_time = 5 * attempt
                 log.warning(
@@ -94,12 +134,15 @@ def safe_get(url, params=None, timeout=10, retries=3):
                 time.sleep(wait_time)
                 continue
 
+            # Raise error for bad HTTP status
             response.raise_for_status()
             return response
 
         except Exception as e:
             last_error = e
             log.warning("HTTP request failed | attempt=%s | error=%s", attempt, str(e))
+
+            # Wait before retrying
             time.sleep(3 * attempt)
 
     if last_error:
@@ -109,6 +152,8 @@ def safe_get(url, params=None, timeout=10, retries=3):
 
 
 def search_wikipedia_pages(query: str):
+    # Searches Wikipedia pages for normalized query
+
     url = "https://en.wikipedia.org/w/api.php"
 
     params = {
@@ -126,6 +171,8 @@ def search_wikipedia_pages(query: str):
 
 
 def select_best_page(query: str):
+    # Selects the best Wikipedia page for the user query
+
     clean_query = normalize_wiki_query(query)
 
     log.info(
@@ -140,6 +187,7 @@ def select_best_page(query: str):
         log.warning("No Wikipedia search results | query=%s", clean_query)
         return None
 
+    # Pick first Wikipedia search result as best page
     best_title = search_results[0]["title"]
 
     log.info("Wikipedia best page selected | title=%s", best_title)
@@ -148,6 +196,8 @@ def select_best_page(query: str):
 
 
 def select_relevant_sections(page, query):
+    # Selects sections from Wikipedia page that match query words
+
     selected = []
     query_words = normalize_wiki_query(query).split()
 
@@ -157,6 +207,7 @@ def select_relevant_sections(page, query):
 
         combined = (section_title + " " + section_text).lower()
 
+        # Keep sections containing query words
         if any(word in combined for word in query_words):
             selected.append(
                 {
@@ -165,10 +216,13 @@ def select_relevant_sections(page, query):
                 }
             )
 
+    # Limit to top 3 relevant sections
     return selected[:3]
 
 
 def get_wikipedia_files(page_title: str):
+    # Gets media file titles linked to Wikipedia page
+
     url = "https://en.wikipedia.org/w/api.php"
 
     params = {
@@ -191,10 +245,13 @@ def get_wikipedia_files(page_title: str):
             if title:
                 file_titles.append(title)
 
+    # Limit how many files are checked
     return file_titles[:MAX_FILE_CHECKS]
 
 
 def get_file_url(file_title: str):
+    # Gets actual downloadable media URL for a Wikipedia file title
+
     url = "https://en.wikipedia.org/w/api.php"
 
     params = {
@@ -224,6 +281,8 @@ def get_file_url(file_title: str):
 
 
 def split_files_by_modality(file_titles):
+    # Splits Wikipedia file titles into image/audio/video groups
+
     images = []
     audios = []
     videos = []
@@ -257,6 +316,8 @@ def split_files_by_modality(file_titles):
 
 
 def attach_source_metadata(media_groups, query, page_title):
+    # Adds source topic and page title metadata to media items
+
     source_topic = normalize_wiki_query(query)
 
     for modality in ["image", "audio", "video"]:
@@ -266,33 +327,44 @@ def attach_source_metadata(media_groups, query, page_title):
 
 
 def download_media(media_url, modality):
+    # Downloads media file and returns local file path plus frontend URL
+
     os.makedirs(MEDIA_DIR, exist_ok=True)
 
+    # Extract file extension from URL
     ext = media_url.split(".")[-1].split("?")[0].lower()
 
+    # Fallback extension for image
     if modality == "image" and ext not in ["jpg", "jpeg", "png", "webp"]:
         ext = "jpg"
 
+    # Fallback extension for audio
     if modality == "audio" and ext not in ["mp3", "wav", "ogg", "oga", "flac", "m4a"]:
         ext = "mp3"
 
+    # Fallback extension for video
     if modality == "video" and ext not in ["mp4", "mov", "webm", "ogv"]:
         ext = "mp4"
 
+    # Create unique file name
     filename = f"{uuid.uuid4().hex}.{ext}"
     file_path = os.path.join(MEDIA_DIR, filename)
 
+    # Download media content
     response = safe_get(media_url, params=None, timeout=30, retries=3)
 
     with open(file_path, "wb") as f:
         f.write(response.content)
 
+    # URL used by frontend to display media
     frontend_url = f"http://127.0.0.1:8000/media/{filename}"
 
     return file_path, frontend_url
 
 
 def ingest_media_group(media_items, modality, new_items, limit):
+    # Downloads and ingests media items for a given modality
+
     added = 0
 
     for item in media_items:
@@ -305,6 +377,7 @@ def ingest_media_group(media_items, modality, new_items, limit):
             if not media_url:
                 continue
 
+            # Avoid duplicate media URLs
             if is_media_url_seen(media_url):
                 log.info(
                     "Skipping duplicate media URL | modality=%s | url=%s",
@@ -313,8 +386,10 @@ def ingest_media_group(media_items, modality, new_items, limit):
                 )
                 continue
 
+            # Download media file
             file_path, frontend_url = download_media(media_url, modality)
 
+            # Avoid duplicate file content using file hash
             if is_file_hash_seen(file_path):
                 log.info(
                     "Skipping duplicate media file hash | modality=%s | file=%s",
@@ -329,6 +404,7 @@ def ingest_media_group(media_items, modality, new_items, limit):
 
                 continue
 
+            # Ingest media into vector DB and prepare BM25 item
             media_item = ingest_media(
                 file_path=file_path,
                 modality=modality,
@@ -338,6 +414,7 @@ def ingest_media_group(media_items, modality, new_items, limit):
                 page_title=item.get("page_title", ""),
             )
 
+            # Mark URL and file hash as processed
             mark_media_url_seen(media_url)
             mark_file_hash_seen(file_path)
 
@@ -354,8 +431,11 @@ def ingest_media_group(media_items, modality, new_items, limit):
 
 
 def wikipedia_cold_start(query, intent="text"):
+    # Main cold start function
+
     log.info("Cold start triggered | query=%s | intent=%s", query, intent)
 
+    # Select best Wikipedia page
     page = select_best_page(query)
 
     if page is None or not page.exists():
@@ -363,50 +443,70 @@ def wikipedia_cold_start(query, intent="text"):
         return []
 
     new_items = []
+
+    # Topic name used in metadata
     source_topic = normalize_wiki_query(query)
 
+    # Select query-relevant sections from page
     sections = select_relevant_sections(page, query)
 
+    # If no section matches, use page summary
     if not sections:
         sections = [{"title": "Summary", "text": page.summary}]
 
+    # Combine selected sections into one text block
     full_relevant_text = "\n".join(
         [section["title"] + "\n" + section["text"] for section in sections]
     )
 
+    # Avoid duplicate text ingestion
     if is_text_seen(full_relevant_text):
         log.info("Skipping duplicate text content | page=%s", page.title)
         text_items = []
+
     else:
+        # Ingest text chunks
         text_items = ingest_text(
             text=full_relevant_text,
             source_url=page.fullurl,
             source_topic=source_topic,
             page_title=page.title,
         )
+
+        # Mark text as seen
         mark_text_seen(full_relevant_text)
+
+        # Add text items to new item list
         new_items.extend(text_items)
 
+    # Get Wikipedia files from selected page
     file_titles = get_wikipedia_files(page.title)
+
+    # Split files into image/audio/video groups
     media_groups = split_files_by_modality(file_titles)
+
+    # Attach metadata to media items
     attach_source_metadata(media_groups, query, page.title)
 
+    # Image query: ingest only images
     if intent == "image":
         ingest_media_group(media_groups["image"], "image", new_items, IMAGE_LIMIT)
 
+    # Audio query: ingest only audio
     elif intent == "audio":
         ingest_media_group(media_groups["audio"], "audio", new_items, AUDIO_LIMIT)
 
+    # Video query: ingest only video
     elif intent == "video":
         ingest_media_group(media_groups["video"], "video", new_items, VIDEO_LIMIT)
 
+    # Text query: ingest images, audio, and video along with text
     elif intent == "text":
         ingest_media_group(media_groups["image"], "image", new_items, IMAGE_LIMIT)
         ingest_media_group(media_groups["audio"], "audio", new_items, AUDIO_LIMIT)
         ingest_media_group(media_groups["video"], "video", new_items, VIDEO_LIMIT)
 
-    
-
+    # Add all new items to BM25 keyword index
     add_items_to_bm25(new_items)
 
     log.info(

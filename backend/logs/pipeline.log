@@ -4560,3 +4560,398 @@
 2026-05-27 21:36:48,672 | INFO | main | Cold start skipped | intent=image | gated_count=2 | best_score=0.10565270188221008
 2026-05-27 21:36:48,673 | INFO | evaluation | Evaluation metrics | metrics={'context_precision': 1.0, 'modality_correctness': 1.0, 'answer_relevancy': None, 'final_correctness_score': 1.0, 'retrieved_count': 2, 'response_type': 'image'}
 2026-05-27 21:36:48,673 | INFO | main | Response sent | type=image
+2026-05-28 11:50:12,318 | INFO | wikipediaapi._http_client.base_http_client | Wikipedia: language=en, user_agent: multimodal-rag-project/1.0 (Wikipedia-API/0.14.1; https://github.com/martin-majlis/Wikipedia-API/), extract_format=1
+2026-05-28 11:50:15,041 | INFO | main | Backend started successfully
+2026-05-28 11:51:33,064 | INFO | main | Query received | query=tell me about tiger
+2026-05-28 11:51:33,064 | INFO | main | Intent detected | intent=text
+2026-05-28 11:51:33,065 | INFO | main | Search config | intent=text | top_k=15 | final_threshold=0.07
+2026-05-28 11:51:33,852 | INFO | main | Query embedding created
+2026-05-28 11:51:33,981 | INFO | main | Vector search completed | count=15
+2026-05-28 11:51:33,983 | INFO | main | BM25 search completed | count=7
+2026-05-28 11:51:33,986 | INFO | main | Hybrid merge completed | total_count=17 | filtered_count=17 | best_score=0.11225806451612903
+2026-05-28 11:51:33,988 | INFO | main | Cold start skipped | intent=text | gated_count=7 | best_score=0.11225806451612903
+2026-05-28 11:51:39,364 | INFO | evaluation | Evaluation metrics | metrics={'context_precision': 1.0, 'modality_correctness': 1.0, 'answer_relevancy': 1.0, 'final_correctness_score': 1.0, 'retrieved_count': 7, 'response_type': 'text'}
+2026-05-28 11:51:39,365 | INFO | main | Response sent | type=text
+2026-05-28 11:52:03,966 | INFO | main | Query received | query=give me tiger images
+2026-05-28 11:52:03,966 | INFO | main | Intent detected | intent=image
+2026-05-28 11:52:03,966 | INFO | main | Search config | intent=image | top_k=50 | final_threshold=0.08
+2026-05-28 11:52:04,455 | INFO | main | Query embedding created
+2026-05-28 11:52:04,462 | INFO | main | Vector search completed | count=50
+2026-05-28 11:52:04,462 | INFO | main | BM25 search completed | count=7
+2026-05-28 11:52:04,471 | INFO | main | Hybrid merge completed | total_count=50 | filtered_count=2 | best_score=0.10565270188221008
+2026-05-28 11:52:04,471 | INFO | main | Cold start skipped | intent=image | gated_count=2 | best_score=0.10565270188221008
+2026-05-28 11:52:04,472 | INFO | evaluation | Evaluation metrics | metrics={'context_precision': 1.0, 'modality_correctness': 1.0, 'answer_relevancy': None, 'final_correctness_score': 1.0, 'retrieved_count': 2, 'response_type': 'image'}
+2026-05-28 11:52:04,472 | INFO | main | Response sent | type=image
+2026-05-28 11:52:15,972 | INFO | main | Query received | query=give me tiger audio
+2026-05-28 11:52:15,972 | INFO | main | Intent detected | intent=audio
+2026-05-28 11:52:15,973 | INFO | main | Search config | intent=audio | top_k=50 | final_threshold=0.08
+2026-05-28 11:52:16,425 | INFO | main | Query embedding created
+2026-05-28 11:52:16,430 | INFO | main | Vector search completed | count=50
+2026-05-28 11:52:16,431 | INFO | main | BM25 search completed | count=7
+2026-05-28 11:52:16,436 | INFO | main | Hybrid merge completed | total_count=50 | filtered_count=3 | best_score=0.11175403225806452
+2026-05-28 11:52:16,437 | INFO | main | Cold start skipped | intent=audio | gated_count=1 | best_score=0.11175403225806452
+2026-05-28 11:52:16,437 | INFO | evaluation | Evaluation metrics | metrics={'context_precision': 1.0, 'modality_correctness': 1.0, 'answer_relevancy': None, 'final_correctness_score': 1.0, 'retrieved_count': 1, 'response_type': 'audio'}
+2026-05-28 11:52:16,437 | INFO | main | Response sent | type=audio
+2026-05-28 11:52:41,242 | INFO | main | Query received | query=give me tiger parrot
+2026-05-28 11:52:41,242 | INFO | main | Intent detected | intent=text
+2026-05-28 11:52:41,242 | INFO | main | Search config | intent=text | top_k=15 | final_threshold=0.07
+2026-05-28 11:52:41,686 | INFO | main | Query embedding created
+2026-05-28 11:52:41,689 | INFO | main | Vector search completed | count=15
+2026-05-28 11:52:41,689 | INFO | main | BM25 search completed | count=14
+2026-05-28 11:52:41,692 | INFO | main | Hybrid merge completed | total_count=19 | filtered_count=19 | best_score=0.11200204813108039
+2026-05-28 11:52:41,694 | INFO | main | Cold start needed | intent=text | gated_count=0 | best_score=0.0 | final_threshold=0.07
+2026-05-28 11:52:41,694 | INFO | cold_start | Cold start triggered | query=give me tiger parrot | intent=text
+2026-05-28 11:52:41,694 | INFO | cold_start | Wikipedia search query normalized | original=give me tiger parrot | clean=tiger parrot
+2026-05-28 11:52:42,673 | INFO | cold_start | Wikipedia best page selected | title=Tiger parrot
+2026-05-28 11:52:42,673 | INFO | wikipediaapi._http_client.sync_http_client | Request URL: https://en.wikipedia.org/w/api.php?format=json&redirects=1&action=query&prop=info&titles=Tiger parrot&inprop=protection|talkid|watched|watchers|visitingwatchers|notificationtimestamp|subjectid|url|readable|preload|displaytitle|varianttitles
+2026-05-28 11:52:43,144 | INFO | httpx | HTTP Request: GET https://en.wikipedia.org/w/api.php?format=json&redirects=1&action=query&prop=info&titles=Tiger+parrot&inprop=protection%7Ctalkid%7Cwatched%7Cwatchers%7Cvisitingwatchers%7Cnotificationtimestamp%7Csubjectid%7Curl%7Creadable%7Cpreload%7Cdisplaytitle%7Cvarianttitles "HTTP/1.1 200 OK"
+2026-05-28 11:52:43,145 | INFO | wikipediaapi._http_client.sync_http_client | Request URL: https://en.wikipedia.org/w/api.php?format=json&redirects=1&action=query&prop=extracts&titles=Tiger parrot&explaintext=1&exsectionformat=wiki
+2026-05-28 11:52:43,467 | INFO | httpx | HTTP Request: GET https://en.wikipedia.org/w/api.php?format=json&redirects=1&action=query&prop=extracts&titles=Tiger+parrot&explaintext=1&exsectionformat=wiki "HTTP/1.1 200 OK"
+2026-05-28 11:52:44,086 | INFO | ingestion | Text ingestion completed | chunks=1
+2026-05-28 11:52:48,074 | INFO | ingestion | Media embedding attempt | file=./data/media\ab39213413334c079c6683f445cee780.jpg | attempt=1
+2026-05-28 11:53:07,267 | INFO | ingestion | Media description attempt | modality=image | file=./data/media\ab39213413334c079c6683f445cee780.jpg | attempt=1
+2026-05-28 11:55:01,212 | INFO | wikipediaapi._http_client.base_http_client | Wikipedia: language=en, user_agent: multimodal-rag-project/1.0 (Wikipedia-API/0.14.1; https://github.com/martin-majlis/Wikipedia-API/), extract_format=1
+2026-05-28 11:55:01,535 | INFO | main | Backend started successfully
+2026-05-28 11:55:21,899 | INFO | main | Query received | query=tell me about tiger
+2026-05-28 11:55:21,900 | INFO | main | Intent detected | intent=text
+2026-05-28 11:55:21,900 | INFO | main | Search config | intent=text | top_k=15 | final_threshold=0.07
+2026-05-28 11:55:22,763 | INFO | main | Query embedding created
+2026-05-28 11:55:22,822 | INFO | main | Vector search completed | count=15
+2026-05-28 11:55:22,823 | INFO | main | BM25 search completed | count=7
+2026-05-28 11:55:22,825 | INFO | main | Hybrid merge completed | total_count=17 | filtered_count=17 | best_score=0.11225806451612903
+2026-05-28 11:55:22,826 | INFO | main | Cold start skipped | intent=text | gated_count=8 | best_score=0.11225806451612903
+2026-05-28 11:55:31,394 | INFO | evaluation | Evaluation metrics | metrics={'context_precision': 0.6757, 'retrieval_score_quality': 0.3515, 'entity_coverage': 1.0, 'modality_score': 0.825, 'relevancy_score': 1.0, 'final_correctness_score': 0.8178, 'retrieved_count': 8, 'response_type': 'text'}
+2026-05-28 11:55:31,394 | INFO | main | Response sent | type=text
+2026-05-28 11:56:33,619 | INFO | main | Query received | query=tell me about parrot
+2026-05-28 11:56:33,619 | INFO | main | Intent detected | intent=text
+2026-05-28 11:56:33,619 | INFO | main | Search config | intent=text | top_k=15 | final_threshold=0.07
+2026-05-28 11:56:34,083 | INFO | main | Query embedding created
+2026-05-28 11:56:34,087 | INFO | main | Vector search completed | count=15
+2026-05-28 11:56:34,088 | INFO | main | BM25 search completed | count=7
+2026-05-28 11:56:34,091 | INFO | main | Hybrid merge completed | total_count=17 | filtered_count=17 | best_score=0.11252247488101534
+2026-05-28 11:56:34,092 | INFO | main | Cold start skipped | intent=text | gated_count=8 | best_score=0.11252247488101534
+2026-05-28 11:56:44,764 | INFO | evaluation | Evaluation metrics | metrics={'context_precision': 0.6759, 'retrieval_score_quality': 0.3517, 'entity_coverage': 1.0, 'modality_score': 0.825, 'relevancy_score': 1.0, 'final_correctness_score': 0.8179, 'retrieved_count': 8, 'response_type': 'text'}
+2026-05-28 11:56:44,764 | INFO | main | Response sent | type=text
+2026-05-28 11:57:16,385 | INFO | main | Query received | query=tell me about black hole
+2026-05-28 11:57:16,386 | INFO | main | Intent detected | intent=text
+2026-05-28 11:57:16,386 | INFO | main | Search config | intent=text | top_k=15 | final_threshold=0.07
+2026-05-28 11:57:16,855 | INFO | main | Query embedding created
+2026-05-28 11:57:16,857 | INFO | main | Vector search completed | count=15
+2026-05-28 11:57:16,858 | INFO | main | BM25 search completed | count=12
+2026-05-28 11:57:16,859 | INFO | main | Hybrid merge completed | total_count=23 | filtered_count=23 | best_score=0.19278688524590165
+2026-05-28 11:57:16,861 | INFO | main | Cold start skipped | intent=text | gated_count=4 | best_score=0.19278688524590165
+2026-05-28 11:57:23,421 | INFO | evaluation | Evaluation metrics | metrics={'context_precision': 0.8135, 'retrieval_score_quality': 0.627, 'entity_coverage': 1.0, 'modality_score': 0.575, 'relevancy_score': 1.0, 'final_correctness_score': 0.7979, 'retrieved_count': 4, 'response_type': 'text'}
+2026-05-28 11:57:23,421 | INFO | main | Response sent | type=text
+2026-05-28 11:57:48,718 | INFO | main | Query received | query=gave me black hole images
+2026-05-28 11:57:48,718 | INFO | main | Intent detected | intent=image
+2026-05-28 11:57:48,718 | INFO | main | Search config | intent=image | top_k=50 | final_threshold=0.08
+2026-05-28 11:57:49,206 | INFO | main | Query embedding created
+2026-05-28 11:57:49,210 | INFO | main | Vector search completed | count=50
+2026-05-28 11:57:49,210 | INFO | main | BM25 search completed | count=12
+2026-05-28 11:57:49,222 | INFO | main | Hybrid merge completed | total_count=53 | filtered_count=3 | best_score=0.09538461538461539
+2026-05-28 11:57:49,222 | INFO | main | Cold start needed | intent=image | gated_count=0 | best_score=0.0 | final_threshold=0.08
+2026-05-28 11:57:49,222 | INFO | cold_start | Cold start triggered | query=gave me black hole images | intent=image
+2026-05-28 11:57:49,223 | INFO | cold_start | Wikipedia search query normalized | original=gave me black hole images | clean=black hole
+2026-05-28 11:57:50,114 | INFO | cold_start | Wikipedia best page selected | title=Black hole
+2026-05-28 11:57:50,114 | INFO | wikipediaapi._http_client.sync_http_client | Request URL: https://en.wikipedia.org/w/api.php?format=json&redirects=1&action=query&prop=info&titles=Black hole&inprop=protection|talkid|watched|watchers|visitingwatchers|notificationtimestamp|subjectid|url|readable|preload|displaytitle|varianttitles
+2026-05-28 11:57:50,833 | INFO | httpx | HTTP Request: GET https://en.wikipedia.org/w/api.php?format=json&redirects=1&action=query&prop=info&titles=Black+hole&inprop=protection%7Ctalkid%7Cwatched%7Cwatchers%7Cvisitingwatchers%7Cnotificationtimestamp%7Csubjectid%7Curl%7Creadable%7Cpreload%7Cdisplaytitle%7Cvarianttitles "HTTP/1.1 200 OK"
+2026-05-28 11:57:50,833 | INFO | wikipediaapi._http_client.sync_http_client | Request URL: https://en.wikipedia.org/w/api.php?format=json&redirects=1&action=query&prop=extracts&titles=Black hole&explaintext=1&exsectionformat=wiki
+2026-05-28 11:57:51,540 | INFO | httpx | HTTP Request: GET https://en.wikipedia.org/w/api.php?format=json&redirects=1&action=query&prop=extracts&titles=Black+hole&explaintext=1&exsectionformat=wiki "HTTP/1.1 200 OK"
+2026-05-28 11:57:51,602 | INFO | cold_start | Skipping duplicate text content | page=Black hole
+2026-05-28 11:57:58,301 | WARNING | cold_start | Wikipedia rate limit hit | attempt=1 | waiting=5 sec
+2026-05-28 11:58:11,062 | WARNING | cold_start | Wikipedia rate limit hit | attempt=1 | waiting=5 sec
+2026-05-28 11:58:16,709 | WARNING | cold_start | Wikipedia rate limit hit | attempt=2 | waiting=10 sec
+2026-05-28 11:58:27,337 | WARNING | cold_start | Wikipedia rate limit hit | attempt=3 | waiting=15 sec
+2026-05-28 11:58:42,337 | WARNING | cold_start | File info failed | title=File:Cscr-featured.svg | error=HTTP request failed after retries
+2026-05-28 11:58:43,035 | WARNING | cold_start | Wikipedia rate limit hit | attempt=1 | waiting=5 sec
+2026-05-28 11:58:48,691 | WARNING | cold_start | Wikipedia rate limit hit | attempt=2 | waiting=10 sec
+2026-05-28 11:58:59,360 | WARNING | cold_start | Wikipedia rate limit hit | attempt=3 | waiting=15 sec
+2026-05-28 11:59:14,361 | WARNING | cold_start | File info failed | title=File:Ergosphere and event horizon of a rotating black hole (no animation).gif | error=HTTP request failed after retries
+2026-05-28 11:59:15,429 | INFO | ingestion | Media embedding attempt | file=./data/media\c8c34d632bb74da09b3b928127e653dc.jpg | attempt=1
+2026-05-28 11:59:22,620 | INFO | ingestion | Media description attempt | modality=image | file=./data/media\c8c34d632bb74da09b3b928127e653dc.jpg | attempt=1
+2026-05-28 12:01:42,860 | INFO | ingestion | Media ingestion completed | modality=image | id=image_0f4648fecbfc49e793166c5bf406ec59
+2026-05-28 12:01:44,043 | INFO | ingestion | Media embedding attempt | file=./data/media\ea770a5bc71f4e16803104befd12da88.jpg | attempt=1
+2026-05-28 12:01:51,302 | INFO | ingestion | Media description attempt | modality=image | file=./data/media\ea770a5bc71f4e16803104befd12da88.jpg | attempt=1
+2026-05-28 12:04:06,892 | INFO | ingestion | Media ingestion completed | modality=image | id=image_58b12fb114e6443f8b7f196de0260a4d
+2026-05-28 12:04:06,925 | INFO | cold_start | Cold start ingestion completed | page=Black hole | intent=image | text_items=0 | images_found=8 | audios_found=2 | videos_found=1 | total_new_unique=2
+2026-05-28 12:04:06,926 | INFO | main | New unique data ingested from cold start | count=2
+2026-05-28 12:04:06,931 | INFO | main | Vector search rerun completed | count=50
+2026-05-28 12:04:06,931 | INFO | main | BM25 search rerun completed | count=14
+2026-05-28 12:04:06,936 | INFO | main | Hybrid merge rerun completed | total_count=55 | filtered_count=5 | best_score=0.1847159090909091
+2026-05-28 12:04:10,753 | INFO | evaluation | Evaluation metrics | metrics={'context_precision': 0.6341, 'retrieval_score_quality': 0.6014, 'entity_coverage': 0.6667, 'modality_score': 1.0, 'relevancy_score': 1.0, 'final_correctness_score': 0.8536, 'retrieved_count': 2, 'response_type': 'image'}
+2026-05-28 12:04:10,755 | INFO | main | Response sent | type=image
+2026-05-28 12:05:01,559 | INFO | main | Query received | query=gave me parrot audio
+2026-05-28 12:05:01,559 | INFO | main | Intent detected | intent=audio
+2026-05-28 12:05:01,560 | INFO | main | Search config | intent=audio | top_k=50 | final_threshold=0.08
+2026-05-28 12:05:02,014 | INFO | main | Query embedding created
+2026-05-28 12:05:02,025 | INFO | main | Vector search completed | count=50
+2026-05-28 12:05:02,027 | INFO | main | BM25 search completed | count=7
+2026-05-28 12:05:02,035 | INFO | main | Hybrid merge completed | total_count=50 | filtered_count=3 | best_score=0.11177805800756621
+2026-05-28 12:05:02,036 | INFO | main | Cold start skipped | intent=audio | gated_count=1 | best_score=0.11177805800756621
+2026-05-28 12:05:12,907 | INFO | evaluation | Evaluation metrics | metrics={'context_precision': 0.4363, 'retrieval_score_quality': 0.3726, 'entity_coverage': 0.5, 'modality_score': 1.0, 'relevancy_score': 0.25, 'final_correctness_score': 0.5495, 'retrieved_count': 1, 'response_type': 'audio'}
+2026-05-28 12:05:12,908 | INFO | main | Response sent | type=audio
+2026-05-28 12:05:37,153 | INFO | main | Query received | query=gave me black hole video
+2026-05-28 12:05:37,153 | INFO | main | Intent detected | intent=video
+2026-05-28 12:05:37,153 | INFO | main | Search config | intent=video | top_k=50 | final_threshold=0.08
+2026-05-28 12:05:37,595 | INFO | main | Query embedding created
+2026-05-28 12:05:37,598 | INFO | main | Vector search completed | count=50
+2026-05-28 12:05:37,599 | INFO | main | BM25 search completed | count=14
+2026-05-28 12:05:37,604 | INFO | main | Hybrid merge completed | total_count=55 | filtered_count=2 | best_score=0.18513227513227515
+2026-05-28 12:05:37,604 | INFO | main | Cold start skipped | intent=video | gated_count=1 | best_score=0.18513227513227515
+2026-05-28 12:05:40,239 | INFO | evaluation | Evaluation metrics | metrics={'context_precision': 0.6419, 'retrieval_score_quality': 0.6171, 'entity_coverage': 0.6667, 'modality_score': 1.0, 'relevancy_score': 1.0, 'final_correctness_score': 0.8568, 'retrieved_count': 1, 'response_type': 'video'}
+2026-05-28 12:05:40,239 | INFO | main | Response sent | type=video
+2026-05-28 12:06:07,930 | INFO | main | Query received | query=tell me about tiger food
+2026-05-28 12:06:07,931 | INFO | main | Intent detected | intent=text
+2026-05-28 12:06:07,931 | INFO | main | Search config | intent=text | top_k=15 | final_threshold=0.07
+2026-05-28 12:06:08,378 | INFO | main | Query embedding created
+2026-05-28 12:06:08,380 | INFO | main | Vector search completed | count=15
+2026-05-28 12:06:08,381 | INFO | main | BM25 search completed | count=14
+2026-05-28 12:06:08,382 | INFO | main | Hybrid merge completed | total_count=20 | filtered_count=20 | best_score=0.11200204813108039
+2026-05-28 12:06:08,384 | INFO | main | Cold start needed | intent=text | gated_count=0 | best_score=0.0 | final_threshold=0.07
+2026-05-28 12:06:08,384 | INFO | cold_start | Cold start triggered | query=tell me about tiger food | intent=text
+2026-05-28 12:06:08,385 | INFO | cold_start | Wikipedia search query normalized | original=tell me about tiger food | clean=tiger food
+2026-05-28 12:06:09,296 | INFO | cold_start | Wikipedia best page selected | title=Tiger Brands
+2026-05-28 12:06:09,296 | INFO | wikipediaapi._http_client.sync_http_client | Request URL: https://en.wikipedia.org/w/api.php?format=json&redirects=1&action=query&prop=info&titles=Tiger Brands&inprop=protection|talkid|watched|watchers|visitingwatchers|notificationtimestamp|subjectid|url|readable|preload|displaytitle|varianttitles
+2026-05-28 12:06:09,750 | INFO | httpx | HTTP Request: GET https://en.wikipedia.org/w/api.php?format=json&redirects=1&action=query&prop=info&titles=Tiger+Brands&inprop=protection%7Ctalkid%7Cwatched%7Cwatchers%7Cvisitingwatchers%7Cnotificationtimestamp%7Csubjectid%7Curl%7Creadable%7Cpreload%7Cdisplaytitle%7Cvarianttitles "HTTP/1.1 200 OK"
+2026-05-28 12:06:09,750 | INFO | wikipediaapi._http_client.sync_http_client | Request URL: https://en.wikipedia.org/w/api.php?format=json&redirects=1&action=query&prop=extracts&titles=Tiger Brands&explaintext=1&exsectionformat=wiki
+2026-05-28 12:06:10,075 | INFO | httpx | HTTP Request: GET https://en.wikipedia.org/w/api.php?format=json&redirects=1&action=query&prop=extracts&titles=Tiger+Brands&explaintext=1&exsectionformat=wiki "HTTP/1.1 200 OK"
+2026-05-28 12:06:11,604 | INFO | ingestion | Text ingestion completed | chunks=3
+2026-05-28 12:06:18,291 | INFO | ingestion | Media embedding attempt | file=./data/media\312e9126c37e47da96ff87f54c027542.png | attempt=1
+2026-05-28 12:06:27,567 | INFO | ingestion | Media description attempt | modality=image | file=./data/media\312e9126c37e47da96ff87f54c027542.png | attempt=1
+2026-05-28 12:08:39,949 | INFO | ingestion | Media ingestion completed | modality=image | id=image_b5c826c4af3f484fa0f71eb4765aeb7a
+2026-05-28 12:08:40,855 | INFO | ingestion | Media embedding attempt | file=./data/media\e4918199d34e4fb3bcf84a750a9ba2f2.png | attempt=1
+2026-05-28 12:08:46,685 | INFO | ingestion | Media description attempt | modality=image | file=./data/media\e4918199d34e4fb3bcf84a750a9ba2f2.png | attempt=1
+2026-05-28 12:10:57,473 | INFO | ingestion | Media ingestion completed | modality=image | id=image_481046ce85e349a48f29ef2c7d5e14ea
+2026-05-28 12:10:57,511 | INFO | cold_start | Cold start ingestion completed | page=Tiger Brands | intent=text | text_items=3 | images_found=3 | audios_found=0 | videos_found=0 | total_new_unique=5
+2026-05-28 12:10:57,511 | INFO | main | New unique data ingested from cold start | count=5
+2026-05-28 12:10:57,515 | INFO | main | Vector search rerun completed | count=15
+2026-05-28 12:10:57,515 | INFO | main | BM25 search rerun completed | count=15
+2026-05-28 12:10:57,517 | INFO | main | Hybrid merge rerun completed | total_count=20 | filtered_count=20 | best_score=0.19151364764267992
+2026-05-28 12:11:01,523 | INFO | evaluation | Evaluation metrics | metrics={'context_precision': 0.8076, 'retrieval_score_quality': 0.6152, 'entity_coverage': 1.0, 'modality_score': 0.65, 'relevancy_score': 0.0, 'final_correctness_score': 0.518, 'retrieved_count': 5, 'response_type': 'text'}
+2026-05-28 12:11:01,524 | INFO | main | Response sent | type=text
+2026-05-28 12:11:55,239 | INFO | main | Query received | query=tell me about tajmahal
+2026-05-28 12:11:55,239 | INFO | main | Intent detected | intent=text
+2026-05-28 12:11:55,239 | INFO | main | Search config | intent=text | top_k=15 | final_threshold=0.07
+2026-05-28 12:11:55,706 | INFO | main | Query embedding created
+2026-05-28 12:11:55,710 | INFO | main | Vector search completed | count=15
+2026-05-28 12:11:55,711 | INFO | main | BM25 search completed | count=2
+2026-05-28 12:11:55,713 | INFO | main | Hybrid merge completed | total_count=17 | filtered_count=17 | best_score=0.09639344262295083
+2026-05-28 12:11:55,713 | INFO | main | Cold start skipped | intent=text | gated_count=4 | best_score=0.09639344262295083
+2026-05-28 12:12:01,994 | INFO | evaluation | Evaluation metrics | metrics={'context_precision': 0.6604, 'retrieval_score_quality': 0.3209, 'entity_coverage': 1.0, 'modality_score': 0.65, 'relevancy_score': 1.0, 'final_correctness_score': 0.7592, 'retrieved_count': 4, 'response_type': 'text'}
+2026-05-28 12:12:01,994 | INFO | main | Response sent | type=text
+2026-05-28 12:12:57,553 | INFO | main | Query received | query=tell me about mumtaz and shahjahan
+2026-05-28 12:12:57,553 | INFO | main | Intent detected | intent=text
+2026-05-28 12:12:57,553 | INFO | main | Search config | intent=text | top_k=15 | final_threshold=0.07
+2026-05-28 12:12:58,034 | INFO | main | Query embedding created
+2026-05-28 12:12:58,040 | INFO | main | Vector search completed | count=15
+2026-05-28 12:12:58,040 | INFO | main | BM25 search completed | count=1
+2026-05-28 12:12:58,042 | INFO | main | Hybrid merge completed | total_count=15 | filtered_count=15 | best_score=0.11278688524590164
+2026-05-28 12:12:58,043 | INFO | main | Cold start needed | intent=text | gated_count=0 | best_score=0.0 | final_threshold=0.07
+2026-05-28 12:12:58,043 | INFO | cold_start | Cold start triggered | query=tell me about mumtaz and shahjahan | intent=text
+2026-05-28 12:12:58,043 | INFO | cold_start | Wikipedia search query normalized | original=tell me about mumtaz and shahjahan | clean=mumtaz and shahjahan
+2026-05-28 12:12:59,039 | INFO | cold_start | Wikipedia best page selected | title=Shah Jahan
+2026-05-28 12:12:59,039 | INFO | wikipediaapi._http_client.sync_http_client | Request URL: https://en.wikipedia.org/w/api.php?format=json&redirects=1&action=query&prop=info&titles=Shah Jahan&inprop=protection|talkid|watched|watchers|visitingwatchers|notificationtimestamp|subjectid|url|readable|preload|displaytitle|varianttitles
+2026-05-28 12:12:59,543 | INFO | httpx | HTTP Request: GET https://en.wikipedia.org/w/api.php?format=json&redirects=1&action=query&prop=info&titles=Shah+Jahan&inprop=protection%7Ctalkid%7Cwatched%7Cwatchers%7Cvisitingwatchers%7Cnotificationtimestamp%7Csubjectid%7Curl%7Creadable%7Cpreload%7Cdisplaytitle%7Cvarianttitles "HTTP/1.1 200 OK"
+2026-05-28 12:12:59,544 | INFO | wikipediaapi._http_client.sync_http_client | Request URL: https://en.wikipedia.org/w/api.php?format=json&redirects=1&action=query&prop=extracts&titles=Shah Jahan&explaintext=1&exsectionformat=wiki
+2026-05-28 12:13:00,192 | INFO | httpx | HTTP Request: GET https://en.wikipedia.org/w/api.php?format=json&redirects=1&action=query&prop=extracts&titles=Shah+Jahan&explaintext=1&exsectionformat=wiki "HTTP/1.1 200 OK"
+2026-05-28 12:13:03,560 | INFO | ingestion | Text ingestion completed | chunks=6
+2026-05-28 12:13:11,324 | WARNING | cold_start | Wikipedia rate limit hit | attempt=1 | waiting=5 sec
+2026-05-28 12:13:16,952 | WARNING | cold_start | Wikipedia rate limit hit | attempt=2 | waiting=10 sec
+2026-05-28 12:13:27,592 | WARNING | cold_start | Wikipedia rate limit hit | attempt=3 | waiting=15 sec
+2026-05-28 12:13:42,593 | WARNING | cold_start | File info failed | title=File:Jahangir and Prince Khurram Entertained by Nur Jahan.jpg | error=HTTP request failed after retries
+2026-05-28 12:13:43,373 | WARNING | cold_start | Wikipedia rate limit hit | attempt=1 | waiting=5 sec
+2026-05-28 12:13:49,065 | WARNING | cold_start | Wikipedia rate limit hit | attempt=2 | waiting=10 sec
+2026-05-28 12:13:59,733 | WARNING | cold_start | Wikipedia rate limit hit | attempt=3 | waiting=15 sec
+2026-05-28 12:14:14,734 | WARNING | cold_start | File info failed | title=File:Manohar. Emperor Jahangir Weighs Prince Khurram. Page from Tuzuk-i Jahangiri. 1610-1615, British Museum, London.jpg | error=HTTP request failed after retries
+2026-05-28 12:14:23,563 | INFO | ingestion | Media embedding attempt | file=./data/media\24273787150945be9c99d8aa129be86c.jpg | attempt=1
+2026-05-28 12:14:36,693 | INFO | ingestion | Media description attempt | modality=image | file=./data/media\24273787150945be9c99d8aa129be86c.jpg | attempt=1
+2026-05-28 12:16:57,887 | INFO | ingestion | Media ingestion completed | modality=image | id=image_8c78a3e489534cf5980faea3e9b7abcb
+2026-05-28 12:16:58,786 | INFO | ingestion | Media embedding attempt | file=./data/media\322bfc12667d4a6ab9d6d716df739c44.jpg | attempt=1
+2026-05-28 12:17:06,000 | INFO | ingestion | Media description attempt | modality=image | file=./data/media\322bfc12667d4a6ab9d6d716df739c44.jpg | attempt=1
+2026-05-28 12:19:20,387 | INFO | ingestion | Media ingestion completed | modality=image | id=image_3524f794077b49ee9b071b14dea4de80
+2026-05-28 12:19:20,434 | INFO | cold_start | Cold start ingestion completed | page=Shah Jahan | intent=text | text_items=6 | images_found=12 | audios_found=0 | videos_found=0 | total_new_unique=8
+2026-05-28 12:19:20,434 | INFO | main | New unique data ingested from cold start | count=8
+2026-05-28 12:19:20,438 | INFO | main | Vector search rerun completed | count=15
+2026-05-28 12:19:20,438 | INFO | main | BM25 search rerun completed | count=5
+2026-05-28 12:19:20,441 | INFO | main | Hybrid merge rerun completed | total_count=17 | filtered_count=17 | best_score=0.19226645849596669
+2026-05-28 12:19:29,212 | INFO | evaluation | Evaluation metrics | metrics={'context_precision': 0.7994, 'retrieval_score_quality': 0.5989, 'entity_coverage': 1.0, 'modality_score': 0.65, 'relevancy_score': 1.0, 'final_correctness_score': 0.8148, 'retrieved_count': 8, 'response_type': 'text'}
+2026-05-28 12:19:29,212 | INFO | main | Response sent | type=text
+2026-05-28 12:22:28,224 | INFO | main | Query received | query=tell me about lion
+2026-05-28 12:22:28,225 | INFO | main | Intent detected | intent=text
+2026-05-28 12:22:28,225 | INFO | main | Search config | intent=text | top_k=15 | final_threshold=0.07
+2026-05-28 12:22:28,958 | INFO | main | Query embedding created
+2026-05-28 12:22:28,969 | INFO | main | Vector search completed | count=15
+2026-05-28 12:22:28,969 | INFO | main | BM25 search completed | count=8
+2026-05-28 12:22:28,972 | INFO | main | Hybrid merge completed | total_count=19 | filtered_count=19 | best_score=0.11201844262295083
+2026-05-28 12:22:28,973 | INFO | main | Cold start skipped | intent=text | gated_count=8 | best_score=0.11201844262295083
+2026-05-28 12:22:37,239 | INFO | evaluation | Evaluation metrics | metrics={'context_precision': 0.6725, 'retrieval_score_quality': 0.3451, 'entity_coverage': 1.0, 'modality_score': 0.825, 'relevancy_score': 1.0, 'final_correctness_score': 0.8165, 'retrieved_count': 8, 'response_type': 'text'}
+2026-05-28 12:22:37,239 | INFO | main | Response sent | type=text
+2026-05-28 12:24:39,257 | INFO | main | Query received | query=tell me about dance
+2026-05-28 12:24:39,257 | INFO | main | Intent detected | intent=text
+2026-05-28 12:24:39,258 | INFO | main | Search config | intent=text | top_k=15 | final_threshold=0.07
+2026-05-28 12:24:39,854 | INFO | main | Query embedding created
+2026-05-28 12:24:39,862 | INFO | main | Vector search completed | count=15
+2026-05-28 12:24:39,863 | INFO | main | BM25 search completed | count=0
+2026-05-28 12:24:39,866 | INFO | main | Hybrid merge completed | total_count=15 | filtered_count=15 | best_score=0.09639344262295083
+2026-05-28 12:24:39,866 | INFO | main | Cold start skipped | intent=text | gated_count=3 | best_score=0.09639344262295083
+2026-05-28 12:24:46,173 | INFO | evaluation | Evaluation metrics | metrics={'context_precision': 0.6602, 'retrieval_score_quality': 0.3204, 'entity_coverage': 1.0, 'modality_score': 0.4, 'relevancy_score': 1.0, 'final_correctness_score': 0.6841, 'retrieved_count': 3, 'response_type': 'text'}
+2026-05-28 12:24:46,174 | INFO | main | Response sent | type=text
+2026-05-28 12:25:59,403 | INFO | main | Query received | query=tell me about dancing
+2026-05-28 12:25:59,403 | INFO | main | Intent detected | intent=text
+2026-05-28 12:25:59,403 | INFO | main | Search config | intent=text | top_k=15 | final_threshold=0.07
+2026-05-28 12:25:59,912 | INFO | main | Query embedding created
+2026-05-28 12:25:59,935 | INFO | main | Vector search completed | count=15
+2026-05-28 12:25:59,935 | INFO | main | BM25 search completed | count=0
+2026-05-28 12:25:59,936 | INFO | main | Hybrid merge completed | total_count=15 | filtered_count=15 | best_score=0.09639344262295083
+2026-05-28 12:25:59,937 | INFO | main | Cold start skipped | intent=text | gated_count=2 | best_score=0.09639344262295083
+2026-05-28 12:26:05,692 | INFO | evaluation | Evaluation metrics | metrics={'context_precision': 0.6602, 'retrieval_score_quality': 0.3204, 'entity_coverage': 1.0, 'modality_score': 0.4, 'relevancy_score': 1.0, 'final_correctness_score': 0.6841, 'retrieved_count': 2, 'response_type': 'text'}
+2026-05-28 12:26:05,692 | INFO | main | Response sent | type=text
+2026-05-28 12:26:17,286 | INFO | main | Query received | query=give me dance images
+2026-05-28 12:26:17,286 | INFO | main | Intent detected | intent=image
+2026-05-28 12:26:17,287 | INFO | main | Search config | intent=image | top_k=50 | final_threshold=0.08
+2026-05-28 12:26:17,787 | INFO | main | Query embedding created
+2026-05-28 12:26:17,797 | INFO | main | Vector search completed | count=50
+2026-05-28 12:26:17,798 | INFO | main | BM25 search completed | count=0
+2026-05-28 12:26:17,806 | INFO | main | Hybrid merge completed | total_count=50 | filtered_count=0 | best_score=0.0
+2026-05-28 12:26:17,807 | INFO | main | Cold start needed | intent=image | gated_count=0 | best_score=0.0 | final_threshold=0.08
+2026-05-28 12:26:17,807 | INFO | cold_start | Cold start triggered | query=give me dance images | intent=image
+2026-05-28 12:26:17,808 | INFO | cold_start | Wikipedia search query normalized | original=give me dance images | clean=dance
+2026-05-28 12:26:18,745 | INFO | cold_start | Wikipedia best page selected | title=Dance
+2026-05-28 12:26:18,745 | INFO | wikipediaapi._http_client.sync_http_client | Request URL: https://en.wikipedia.org/w/api.php?format=json&redirects=1&action=query&prop=info&titles=Dance&inprop=protection|talkid|watched|watchers|visitingwatchers|notificationtimestamp|subjectid|url|readable|preload|displaytitle|varianttitles
+2026-05-28 12:26:19,292 | INFO | httpx | HTTP Request: GET https://en.wikipedia.org/w/api.php?format=json&redirects=1&action=query&prop=info&titles=Dance&inprop=protection%7Ctalkid%7Cwatched%7Cwatchers%7Cvisitingwatchers%7Cnotificationtimestamp%7Csubjectid%7Curl%7Creadable%7Cpreload%7Cdisplaytitle%7Cvarianttitles "HTTP/1.1 200 OK"
+2026-05-28 12:26:19,294 | INFO | wikipediaapi._http_client.sync_http_client | Request URL: https://en.wikipedia.org/w/api.php?format=json&redirects=1&action=query&prop=extracts&titles=Dance&explaintext=1&exsectionformat=wiki
+2026-05-28 12:26:19,807 | INFO | httpx | HTTP Request: GET https://en.wikipedia.org/w/api.php?format=json&redirects=1&action=query&prop=extracts&titles=Dance&explaintext=1&exsectionformat=wiki "HTTP/1.1 200 OK"
+2026-05-28 12:26:19,845 | INFO | cold_start | Skipping duplicate text content | page=Dance
+2026-05-28 12:26:27,135 | WARNING | cold_start | Wikipedia rate limit hit | attempt=1 | waiting=5 sec
+2026-05-28 12:26:32,927 | WARNING | cold_start | Wikipedia rate limit hit | attempt=2 | waiting=10 sec
+2026-05-28 12:26:43,720 | WARNING | cold_start | Wikipedia rate limit hit | attempt=3 | waiting=15 sec
+2026-05-28 12:26:58,722 | WARNING | cold_start | File info failed | title=File:Buffalo Dance (1894).webm | error=HTTP request failed after retries
+2026-05-28 12:26:59,504 | WARNING | cold_start | Wikipedia rate limit hit | attempt=1 | waiting=5 sec
+2026-05-28 12:27:14,192 | WARNING | cold_start | Wikipedia rate limit hit | attempt=1 | waiting=5 sec
+2026-05-28 12:27:20,165 | WARNING | cold_start | Wikipedia rate limit hit | attempt=2 | waiting=10 sec
+2026-05-28 12:27:31,190 | WARNING | cold_start | Wikipedia rate limit hit | attempt=3 | waiting=15 sec
+2026-05-28 12:27:46,192 | WARNING | cold_start | File info failed | title=File:Edit-clear.svg | error=HTTP request failed after retries
+2026-05-28 12:27:53,622 | INFO | ingestion | Media embedding attempt | file=./data/media\c87b1919c2bf41d78bf8111638026390.jpg | attempt=1
+2026-05-28 12:33:25,417 | INFO | wikipediaapi._http_client.base_http_client | Wikipedia: language=en, user_agent: multimodal-rag-project/1.0 (Wikipedia-API/0.14.1; https://github.com/martin-majlis/Wikipedia-API/), extract_format=1
+2026-05-28 12:33:26,192 | INFO | main | Backend started successfully
+2026-05-28 12:33:54,760 | INFO | main | Query received | query=tell me about tiger
+2026-05-28 12:33:54,761 | INFO | main | Intent detected | intent=text
+2026-05-28 12:33:54,761 | INFO | main | Search config | intent=text | top_k=15 | final_threshold=0.07
+2026-05-28 12:33:55,500 | INFO | main | Query embedding created
+2026-05-28 12:33:55,607 | INFO | main | Vector search completed | count=15
+2026-05-28 12:33:55,609 | INFO | main | BM25 search completed | count=11
+2026-05-28 12:33:55,612 | INFO | main | Hybrid merge completed | total_count=19 | filtered_count=19 | best_score=0.11175403225806452
+2026-05-28 12:33:55,615 | INFO | main | Cold start skipped | intent=text | gated_count=12 | best_score=0.11175403225806452
+2026-05-28 12:34:11,134 | INFO | evaluation | Evaluation metrics | metrics={'context_precision': 0.6737, 'retrieval_score_quality': 0.3474, 'entity_coverage': 1.0, 'modality_score': 0.825, 'relevancy_score': 0.75, 'final_correctness_score': 0.742, 'retrieved_count': 12, 'response_type': 'text'}
+2026-05-28 12:34:11,135 | INFO | main | Response sent | type=text
+2026-05-28 12:39:20,035 | INFO | wikipediaapi._http_client.base_http_client | Wikipedia: language=en, user_agent: multimodal-rag-project/1.0 (Wikipedia-API/0.14.1; https://github.com/martin-majlis/Wikipedia-API/), extract_format=1
+2026-05-28 12:39:20,492 | INFO | main | Backend started successfully
+2026-05-28 12:41:42,517 | INFO | wikipediaapi._http_client.base_http_client | Wikipedia: language=en, user_agent: multimodal-rag-project/1.0 (Wikipedia-API/0.14.1; https://github.com/martin-majlis/Wikipedia-API/), extract_format=1
+2026-05-28 12:41:42,858 | INFO | main | Backend started successfully
+2026-05-28 12:42:04,569 | INFO | main | Query received | query=tell me about tiger
+2026-05-28 12:42:04,570 | INFO | main | Intent detected | intent=text
+2026-05-28 12:42:04,570 | INFO | main | Search config | intent=text | top_k=15 | final_threshold=0.07
+2026-05-28 12:42:05,306 | INFO | main | Query embedding created
+2026-05-28 12:42:05,406 | INFO | main | Vector search completed | count=15
+2026-05-28 12:42:05,407 | INFO | main | BM25 search completed | count=11
+2026-05-28 12:42:05,409 | INFO | main | Hybrid merge completed | total_count=19 | filtered_count=19 | best_score=0.11175403225806452
+2026-05-28 12:42:05,410 | INFO | main | Cold start skipped | intent=text | gated_count=12 | best_score=0.11175403225806452
+2026-05-28 12:42:14,423 | INFO | evaluation | Evaluation metrics | metrics={'context_precision': 0.6737, 'retrieval_score_quality': 0.3474, 'entity_coverage': 1.0, 'modality_score': 0.825, 'relevancy_score': 1.0, 'final_correctness_score': 0.817, 'retrieved_count': 12, 'response_type': 'text'}
+2026-05-28 12:42:14,424 | INFO | main | Response sent | type=text
+2026-05-28 12:49:25,984 | INFO | main | Query received | query=tell me about parrot
+2026-05-28 12:49:25,985 | INFO | main | Intent detected | intent=text
+2026-05-28 12:49:25,985 | INFO | main | Search config | intent=text | top_k=15 | final_threshold=0.07
+2026-05-28 12:49:26,583 | INFO | main | Query embedding created
+2026-05-28 12:49:26,597 | INFO | main | Vector search completed | count=15
+2026-05-28 12:49:26,600 | INFO | main | BM25 search completed | count=7
+2026-05-28 12:49:26,604 | INFO | main | Hybrid merge completed | total_count=17 | filtered_count=17 | best_score=0.11252247488101534
+2026-05-28 12:49:26,606 | INFO | main | Cold start skipped | intent=text | gated_count=8 | best_score=0.11252247488101534
+2026-05-28 12:49:32,494 | INFO | evaluation | Evaluation metrics | metrics={'context_precision': 0.6759, 'retrieval_score_quality': 0.3517, 'entity_coverage': 1.0, 'modality_score': 0.825, 'relevancy_score': 1.0, 'final_correctness_score': 0.8179, 'retrieved_count': 8, 'response_type': 'text'}
+2026-05-28 12:49:32,495 | INFO | main | Response sent | type=text
+2026-05-28 12:49:53,698 | INFO | main | Query received | query=gave me parrot audio
+2026-05-28 12:49:53,698 | INFO | main | Intent detected | intent=audio
+2026-05-28 12:49:53,698 | INFO | main | Search config | intent=audio | top_k=50 | final_threshold=0.08
+2026-05-28 12:49:54,142 | INFO | main | Query embedding created
+2026-05-28 12:49:54,157 | INFO | main | Vector search completed | count=50
+2026-05-28 12:49:54,157 | INFO | main | BM25 search completed | count=7
+2026-05-28 12:49:54,164 | INFO | main | Hybrid merge completed | total_count=52 | filtered_count=3 | best_score=0.11177805800756621
+2026-05-28 12:49:54,164 | INFO | main | Cold start skipped | intent=audio | gated_count=1 | best_score=0.11177805800756621
+2026-05-28 12:50:06,321 | INFO | evaluation | Evaluation metrics | metrics={'context_precision': 0.4363, 'retrieval_score_quality': 0.3726, 'entity_coverage': 0.5, 'modality_score': 1.0, 'relevancy_score': 0.25, 'final_correctness_score': 0.5495, 'retrieved_count': 1, 'response_type': 'audio'}
+2026-05-28 12:50:06,322 | INFO | main | Response sent | type=audio
+2026-05-28 12:50:19,846 | INFO | main | Query received | query=gave me tiger audio
+2026-05-28 12:50:19,847 | INFO | main | Intent detected | intent=audio
+2026-05-28 12:50:19,847 | INFO | main | Search config | intent=audio | top_k=50 | final_threshold=0.08
+2026-05-28 12:50:20,269 | INFO | main | Query embedding created
+2026-05-28 12:50:20,276 | INFO | main | Vector search completed | count=50
+2026-05-28 12:50:20,276 | INFO | main | BM25 search completed | count=11
+2026-05-28 12:50:20,283 | INFO | main | Hybrid merge completed | total_count=54 | filtered_count=3 | best_score=0.11077651515151515
+2026-05-28 12:50:20,284 | INFO | main | Cold start skipped | intent=audio | gated_count=1 | best_score=0.11077651515151515
+2026-05-28 12:50:30,968 | INFO | evaluation | Evaluation metrics | metrics={'context_precision': 0.4346, 'retrieval_score_quality': 0.3693, 'entity_coverage': 0.5, 'modality_score': 1.0, 'relevancy_score': 0.25, 'final_correctness_score': 0.5488, 'retrieved_count': 1, 'response_type': 'audio'}
+2026-05-28 12:50:30,968 | INFO | main | Response sent | type=audio
+2026-05-28 12:50:52,242 | INFO | main | Query received | query=gave me dance video
+2026-05-28 12:50:52,242 | INFO | main | Intent detected | intent=video
+2026-05-28 12:50:52,242 | INFO | main | Search config | intent=video | top_k=50 | final_threshold=0.08
+2026-05-28 12:50:52,724 | INFO | main | Query embedding created
+2026-05-28 12:50:52,731 | INFO | main | Vector search completed | count=50
+2026-05-28 12:50:52,732 | INFO | main | BM25 search completed | count=0
+2026-05-28 12:50:52,739 | INFO | main | Hybrid merge completed | total_count=50 | filtered_count=0 | best_score=0.0
+2026-05-28 12:50:52,739 | INFO | main | Cold start needed | intent=video | gated_count=0 | best_score=0.0 | final_threshold=0.08
+2026-05-28 12:50:52,740 | INFO | cold_start | Cold start triggered | query=gave me dance video | intent=video
+2026-05-28 12:50:52,740 | INFO | cold_start | Wikipedia search query normalized | original=gave me dance video | clean=dance
+2026-05-28 12:50:53,720 | INFO | cold_start | Wikipedia best page selected | title=Dance
+2026-05-28 12:50:53,721 | INFO | wikipediaapi._http_client.sync_http_client | Request URL: https://en.wikipedia.org/w/api.php?format=json&redirects=1&action=query&prop=info&titles=Dance&inprop=protection|talkid|watched|watchers|visitingwatchers|notificationtimestamp|subjectid|url|readable|preload|displaytitle|varianttitles
+2026-05-28 12:50:54,290 | INFO | httpx | HTTP Request: GET https://en.wikipedia.org/w/api.php?format=json&redirects=1&action=query&prop=info&titles=Dance&inprop=protection%7Ctalkid%7Cwatched%7Cwatchers%7Cvisitingwatchers%7Cnotificationtimestamp%7Csubjectid%7Curl%7Creadable%7Cpreload%7Cdisplaytitle%7Cvarianttitles "HTTP/1.1 200 OK"
+2026-05-28 12:50:54,292 | INFO | wikipediaapi._http_client.sync_http_client | Request URL: https://en.wikipedia.org/w/api.php?format=json&redirects=1&action=query&prop=extracts&titles=Dance&explaintext=1&exsectionformat=wiki
+2026-05-28 12:50:54,800 | INFO | httpx | HTTP Request: GET https://en.wikipedia.org/w/api.php?format=json&redirects=1&action=query&prop=extracts&titles=Dance&explaintext=1&exsectionformat=wiki "HTTP/1.1 200 OK"
+2026-05-28 12:50:54,821 | INFO | cold_start | Skipping duplicate text content | page=Dance
+2026-05-28 12:51:09,120 | WARNING | cold_start | Wikipedia rate limit hit | attempt=1 | waiting=5 sec
+2026-05-28 12:51:15,568 | WARNING | cold_start | Wikipedia rate limit hit | attempt=2 | waiting=10 sec
+2026-05-28 12:51:26,166 | WARNING | cold_start | Wikipedia rate limit hit | attempt=3 | waiting=15 sec
+2026-05-28 12:51:41,168 | WARNING | cold_start | File info failed | title=File:Dinastia tang, due danzatrici, cina del nord, 650 ca..JPG | error=HTTP request failed after retries
+2026-05-28 12:51:41,774 | WARNING | cold_start | Wikipedia rate limit hit | attempt=1 | waiting=5 sec
+2026-05-28 12:51:47,443 | WARNING | cold_start | Wikipedia rate limit hit | attempt=2 | waiting=10 sec
+2026-05-28 12:51:58,058 | WARNING | cold_start | Wikipedia rate limit hit | attempt=3 | waiting=15 sec
+2026-05-28 12:52:03,000 | INFO | main | Query received | query=gave me black hole video
+2026-05-28 12:52:03,000 | INFO | main | Intent detected | intent=video
+2026-05-28 12:52:03,001 | INFO | main | Search config | intent=video | top_k=50 | final_threshold=0.08
+2026-05-28 12:52:03,479 | INFO | main | Query embedding created
+2026-05-28 12:52:03,485 | INFO | main | Vector search completed | count=50
+2026-05-28 12:52:03,487 | INFO | main | BM25 search completed | count=18
+2026-05-28 12:52:03,493 | INFO | main | Hybrid merge completed | total_count=59 | filtered_count=2 | best_score=0.17587301587301588
+2026-05-28 12:52:03,494 | INFO | main | Cold start skipped | intent=video | gated_count=1 | best_score=0.17587301587301588
+2026-05-28 12:52:05,887 | INFO | evaluation | Evaluation metrics | metrics={'context_precision': 0.6264, 'retrieval_score_quality': 0.5862, 'entity_coverage': 0.6667, 'modality_score': 1.0, 'relevancy_score': 1.0, 'final_correctness_score': 0.8506, 'retrieved_count': 1, 'response_type': 'video'}
+2026-05-28 12:52:05,887 | INFO | main | Response sent | type=video
+2026-05-28 12:52:13,059 | WARNING | cold_start | File info failed | title=File:Edit-clear.svg | error=HTTP request failed after retries
+2026-05-28 12:52:15,829 | INFO | ingestion | Media embedding attempt | file=./data/media\5f29ef95451d4878a16e6c115dc94e3f.webm | attempt=1
+2026-05-28 14:47:48,555 | INFO | wikipediaapi._http_client.base_http_client | Wikipedia: language=en, user_agent: multimodal-rag-project/1.0 (Wikipedia-API/0.14.1; https://github.com/martin-majlis/Wikipedia-API/), extract_format=1
+2026-05-28 14:47:49,078 | INFO | main | Backend started successfully
+2026-05-28 14:48:05,790 | INFO | main | Query received | query=tell me about tiger
+2026-05-28 14:48:05,790 | INFO | main | Intent detected | intent=text
+2026-05-28 14:48:05,791 | INFO | main | Search config | intent=text | top_k=15 | final_threshold=0.07
+2026-05-28 14:48:06,681 | INFO | main | Query embedding created
+2026-05-28 14:48:06,780 | INFO | main | Vector search completed | count=15
+2026-05-28 14:48:06,782 | INFO | main | BM25 search completed | count=11
+2026-05-28 14:48:06,784 | INFO | main | Hybrid merge completed | total_count=19 | filtered_count=19 | best_score=0.11175403225806452
+2026-05-28 14:48:06,786 | INFO | main | Cold start skipped | intent=text | gated_count=12 | best_score=0.11175403225806452
+2026-05-28 14:48:19,099 | INFO | evaluation | Evaluation metrics | metrics={'context_precision': 0.6737, 'retrieval_score_quality': 0.3474, 'entity_coverage': 1.0, 'modality_score': 0.825, 'relevancy_score': 1.0, 'final_correctness_score': 0.817, 'retrieved_count': 12, 'response_type': 'text'}
+2026-05-28 14:48:19,099 | INFO | main | Response sent | type=text
+2026-05-28 14:49:12,901 | INFO | main | Query received | query=tell me about parrot
+2026-05-28 14:49:12,901 | INFO | main | Intent detected | intent=text
+2026-05-28 14:49:12,901 | INFO | main | Search config | intent=text | top_k=15 | final_threshold=0.07
+2026-05-28 14:49:13,390 | INFO | main | Query embedding created
+2026-05-28 14:49:13,400 | INFO | main | Vector search completed | count=15
+2026-05-28 14:49:13,401 | INFO | main | BM25 search completed | count=7
+2026-05-28 14:49:13,411 | INFO | main | Hybrid merge completed | total_count=17 | filtered_count=17 | best_score=0.11252247488101534
+2026-05-28 14:49:13,414 | INFO | main | Cold start skipped | intent=text | gated_count=8 | best_score=0.11252247488101534
+2026-05-28 14:49:22,845 | INFO | evaluation | Evaluation metrics | metrics={'context_precision': 0.6759, 'retrieval_score_quality': 0.3517, 'entity_coverage': 1.0, 'modality_score': 0.825, 'relevancy_score': 1.0, 'final_correctness_score': 0.8179, 'retrieved_count': 8, 'response_type': 'text'}
+2026-05-28 14:49:22,846 | INFO | main | Response sent | type=text
+2026-05-28 14:51:06,402 | INFO | main | Query received | query=give me parrot images
+2026-05-28 14:51:06,403 | INFO | main | Intent detected | intent=image
+2026-05-28 14:51:06,409 | INFO | main | Search config | intent=image | top_k=50 | final_threshold=0.08
+2026-05-28 14:51:07,026 | INFO | main | Query embedding created
+2026-05-28 14:51:07,046 | INFO | main | Vector search completed | count=50
+2026-05-28 14:51:07,047 | INFO | main | BM25 search completed | count=7
+2026-05-28 14:51:07,073 | INFO | main | Hybrid merge completed | total_count=52 | filtered_count=2 | best_score=0.09515151515151515
+2026-05-28 14:51:07,076 | INFO | main | Cold start skipped | intent=image | gated_count=2 | best_score=0.09515151515151515
+2026-05-28 14:51:18,074 | INFO | evaluation | Evaluation metrics | metrics={'context_precision': 0.6584, 'retrieval_score_quality': 0.3168, 'entity_coverage': 1.0, 'modality_score': 1.0, 'relevancy_score': 0.75, 'final_correctness_score': 0.7884, 'retrieved_count': 2, 'response_type': 'image'}
+2026-05-28 14:51:18,076 | INFO | main | Response sent | type=image
