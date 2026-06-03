@@ -1,7 +1,9 @@
 """
 intent.py
 
-This file detects the user query intent.
+This file detects user intent using a pretrained NLP transformer model.
+
+Intent detection is done using zero-shot classification.
 
 Supported intents:
 - text
@@ -9,92 +11,91 @@ Supported intents:
 - audio
 - video
 
-Intent is used to decide:
-- what modality should be retrieved
-- what response type should be sent to frontend
-- whether LLM answer generation is needed
+Why this approach:
+- It does not depend on simple keyword matching.
+- It uses a pretrained NLP model.
+- It understands the meaning of the full query.
+- No training dataset is required for the current project.
+
+Model used:
+- facebook/bart-large-mnli
+
+How it works:
+- The user query is compared with intent labels.
+- The intent with the highest semantic score is selected.
 """
+
+from transformers import pipeline
+
+from app.logger import get_logger
+
+
+# Create logger for intent detection.
+log = get_logger("intent")
+
+
+# Load zero-shot classification model.
+# This may take time during first startup.
+classifier = pipeline(
+    task="zero-shot-classification",
+    model="facebook/bart-large-mnli"
+)
+
+
+# Candidate labels with clear intent meaning.
+# These labels are semantic descriptions, not only single keywords.
+CANDIDATE_LABELS = [
+    "text explanation or description request",
+    "image or photo request",
+    "audio or sound playback request",
+    "video or clip playback request",
+]
+
+
+# Mapping model labels to pipeline intent names.
+LABEL_TO_INTENT = {
+    "text explanation or description request": "text",
+    "image or photo request": "image",
+    "audio or sound playback request": "audio",
+    "video or clip playback request": "video",
+}
 
 
 def classify_intent(query: str):
-    # Convert query to lowercase for easier matching
-    q = query.lower().strip()
+    """
+    Classifies user query into one of:
+    text, image, audio, video.
 
-    # Phrases that indicate text/topic query
-    text_phrases = [
-        "tell me",
-        "explain",
-        "what is",
-        "who is",
-        "describe",
-        "information about",
-        "details about",
-        "give me information",
-        "give information",
-    ]
+    Uses transformer-based zero-shot classification.
+    """
 
-    # Phrases that indicate image query
-    image_phrases = [
-        "give me image",
-        "give me images",
-        "show image",
-        "show images",
-        "display image",
-        "display images",
-        "photo",
-        "photos",
-        "picture",
-        "pictures",
-    ]
+    try:
+        result = classifier(
+            query,
+            candidate_labels=CANDIDATE_LABELS,
+            hypothesis_template="The user wants {}."
+        )
 
-    # Phrases that indicate audio query
-    audio_phrases = [
-        "give me audio",
-        "give me sound",
-        "play audio",
-        "play sound",
-        "show audio",
-        "audio file",
-        "sound file",
-    ]
+        best_label = result["labels"][0]
+        best_score = float(result["scores"][0])
 
-    # Phrases that indicate video query
-    video_phrases = [
-        "give me video",
-        "show video",
-        "play video",
-        "display video",
-        "video clip",
-        "videos",
-    ]
+        intent = LABEL_TO_INTENT.get(best_label, "text")
 
-    # Text intent has first priority for explanation-style queries
-    if any(phrase in q for phrase in text_phrases):
+        log.info(
+            "NLP intent detected | query=%s | intent=%s | label=%s | score=%s",
+            query,
+            intent,
+            best_label,
+            round(best_score, 4),
+        )
+
+        return intent
+
+    except Exception as e:
+        log.warning(
+            "NLP intent detection failed | query=%s | error=%s",
+            query,
+            str(e),
+        )
+
         return "text"
-
-    # Image intent detection
-    if any(phrase in q for phrase in image_phrases):
-        return "image"
-
-    # Audio intent detection
-    if any(phrase in q for phrase in audio_phrases):
-        return "audio"
-
-    # Video intent detection
-    if any(phrase in q for phrase in video_phrases):
-        return "video"
-
-    # Fallback keyword checks for image
-    if "image" in q or "photo" in q or "picture" in q:
-        return "image"
-
-    # Fallback keyword checks for audio
-    if "audio" in q or "sound" in q:
-        return "audio"
-
-    # Fallback keyword check for video
-    if "video" in q:
-        return "video"
-
-    # Default intent is text
-    return "text"

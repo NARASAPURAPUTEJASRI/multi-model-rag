@@ -19,7 +19,22 @@
     "https://upload.wikimedia.org/wikipedia/en/1/16/Jungle_Oats_1930_%26_2010_box.png",
     "https://upload.wikimedia.org/wikipedia/en/a/ad/Tiger_Brands_Primary_Logo.png",
     "https://upload.wikimedia.org/wikipedia/commons/5/53/%22Rosette_Bearing_the_Names_and_Titles_of_Shah_Jahan%22%2C_Folio_from_the_Shah_Jahan_Album_MET_DT458.jpg",
-    "https://upload.wikimedia.org/wikipedia/commons/4/4c/%27Jujhar_Singh_Bundela_Kneels_in_Submission_to_Shah_Jahan%27%2C_painted_by_Bichitr%2C_c._1630%2C_Chester_Beatty_Library_%28cropped2%29.jpg"
+    "https://upload.wikimedia.org/wikipedia/commons/4/4c/%27Jujhar_Singh_Bundela_Kneels_in_Submission_to_Shah_Jahan%27%2C_painted_by_Bichitr%2C_c._1630%2C_Chester_Beatty_Library_%28cropped2%29.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/5/5c/Double-alaskan-rainbow.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/e/eb/PikiWiki_Israel_41259_Israeli_Rainbow.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/c/c6/California_High_Desert_Cottontail_Resting_%28cropped%29.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/7/77/Female_repro_system_labelled.JPG",
+    "https://upload.wikimedia.org/wikipedia/commons/b/bd/D274.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/3/3a/DisklavierPlayer.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/f/f6/Quilon_Syrian_copper_plates_%289th_century_AD%29.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/c/c1/AnaimudiPeak_DSC_4834.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/0/0c/Alamgir_Mosque_by_the_Ganges_ghats%2C_Varanasi.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/b/b8/BHU_Main_Gate%2C_Banaras_Hindu_University_enhanced.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/0/08/Corl0207_%2828225976491%29.jpg",
+    "https://upload.wikimedia.org/wikipedia/en/5/53/Greyreefsharksmall2.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/1/1a/APSRTC_bus1.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/d/d7/Andhra_Pradesh_-_Landscapes_from_Andhra_Pradesh%2C_views_from_Indias_South_Central_Railway_%2883%29.JPG",
+    "https://upload.wikimedia.org/wikipedia/commons/8/81/Murugan_by_Raja_Ravi_Varma.jpg"
   ],
   "file_hashes": [
     "d6a425d0d5ca48c01d4b59c6da32645942d81ebc5afe90f78e13da70b6819756",
@@ -41,7 +56,22 @@
     "45835f1f64c95ba715f054d6cfd9cd7bb48570cb22bbb8e87a9a6b53dcc5b41e",
     "ba087b184e48ff6bde23442f989c30e70d17563a47f2b4680853f4abbd7dea67",
     "2a57057fbc3eda978de0b665f122996d71997f9e6f9be80bddbf1be28f198b65",
-    "66dfc753244456389eef7a4db4d59b23ab2a436e9e40e0fd6ec978e216e0c31f"
+    "66dfc753244456389eef7a4db4d59b23ab2a436e9e40e0fd6ec978e216e0c31f",
+    "bd5ce986d5db4b585152778ebfdeded32a329ec1b107367d48dfb3d640cebbd3",
+    "dd4ece6763fd381ca17193177689c2311ec293ee27a71632b0936452171d37d4",
+    "96a62ea01a7b6032846be78800037dcea5a58b7c85ebc906fed5cb4901fa61cd",
+    "b21f86bd3b2e25cb1ee1682e7b0a9fa4bf88e3ede72a58d3288abac3e5de570f",
+    "b4a8ac8a34a1eee870ae1c3cfd97a76041b0dd5ef04b263fdc6163d939641703",
+    "b897b95dd02501b0a71575dd9424572749ab9bf029bf037229b713f94a27c629",
+    "133f19d49eefeb0134b14ab108ff7ee60c0b2e8ae80bf52b4cd6034a060d7c80",
+    "2b2310243586f039db96ce758405c18ab88d900501adf9b39a9e6ddf8ffea7e9",
+    "8c241f4e42a3a1688dd0e8aa37ad9ef8514f5f044e9a5619bc96a62ba58a7233",
+    "c4aca03c0fac5157407071cf64ed4e6da8471ba9e3ba7567115c063ca9607aac",
+    "eda089e96116339c7c1a6f5c3ed06d63c954468e82806ffcf4148ced272d821e",
+    "67e87c318630153da0a8f84b1ccd8dda4da9e25bbde49a05ef649b2e90f695b5",
+    "5a5d3b450198955f104325933f6bb0bca6ecee1f3b74ef991abd0eea2e8530fd",
+    "feeb2627bb3f0cd00f0a9cf3a28c305248125d25a1ebd0d4cf12b70019d97be3",
+    "baf21fb84e1e6d64c8e970ea308633314ea0964765545a5aec3f362ddc1fb260"
   ],
   "text_hashes": [
     "e6923179e3446a672877eb943b05dbbd76feade2c7ba5bdeabdb4234785b6b1a",
@@ -60,6 +90,15 @@
     "e221690dbf25050814352d2c6c29196c992a00023fe703d46a5a6416f2a79e40",
     "4aa3ba23d0f50236adf7dbe4ef2601f4738d1190dc5318128a23977446540c23",
     "bef63144874be08a6a2e3432f689e47ac81ca641b0487e19af4f4f333f63b156",
-    "004e282c7970f602d4faf2eb5adc37495cd36fbf6e861f03e0bcbf93df49f5e8"
+    "004e282c7970f602d4faf2eb5adc37495cd36fbf6e861f03e0bcbf93df49f5e8",
+    "0a5f68c74ccfd905021bd12a7852a9e4300ac2a093f2711e75ed35ddd9889f66",
+    "5d438be73872bd0ecd6912de9b68322221545e5bf76545b7373fc64aba226536",
+    "29357155e3b48a452c15ab1f876b210344b72f504db0733de1044f0b6d788b07",
+    "68a0b6a5b891066d36e7eae09d8eef97373d40a55d383b8495cb36c8d03158fb",
+    "a46b31e5f6c6efa9940284cd5bfa93ad8c8e5a277803ab24a01ca4fea3605ad6",
+    "7464aeef941a35195b0f546efe13fd24af1145dbb8f69c3a199a49b01fe38e51",
+    "83ef8eabc03c9757d3749ea7071d79f04ac2b12133c7551525f49617d2d55a4c",
+    "35fd5f8733b51766a8730da12226b9408e287f808a639dc9a0e7eb6d761ecd72",
+    "78faaaae1cae50c796f1596a2de8f65db055272dc6558cbdfcd1fc625ceddeba"
   ]
 }
