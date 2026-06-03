@@ -1,721 +1,878 @@
-## 1. Project Overview
+# Multimodal RAG Pipeline with Dynamic Cold Start and RAGAS Evaluation
 
-This project is a Multimodal RAG pipeline that can retrieve and answer using multiple data types:
+## Project Overview
 
-- Text
-- Images
-- Audio
-- Video
+This project is a Multimodal Retrieval-Augmented Generation (RAG) Pipeline that supports:
 
-The system first searches the local database. If relevant data is missing or weak, it performs a Wikipedia cold start, stores new data, and reruns retrieval.
+- Text Retrieval
+- Image Retrieval
+- Audio Retrieval
+- Video Retrieval
+- Dynamic Wikipedia Cold Start
+- Hybrid Search (Vector + BM25)
+- Confidence-Based Retrieval Filtering
+- RAGAS-Based Evaluation
 
-Example:
-User: tell me about Taj Mahal
-System returns:
-- text answer
-- related images
-- audio if available
-- video if available
+The system retrieves relevant multimodal content using semantic embeddings and keyword search, generates responses based on user intent, and evaluates final outputs using RAGAS metrics.
 
-User: give me lion video
-System returns:
-- only lion video if relevant
-- otherwise "No relevant video found"
+---
 
+# System Architecture
 
-## 2. Project Structure
+![image_alt](https://github.com/AnuradhaNama/RAG-MULTI-MODEL-/blob/main/final%20ragg%20t%20image.png)
 
-![image alt](https://github.com/NARASAPURAPUTEJASRI/multi-model-rag/blob/main/Rag_project_structure.jpeg)
+# Project Structure
 
-## 3. File Explanation                                                                                         
-**main.py** - Main backend controller. Handles query flow, retrieval, cold start, evaluation logs,and response.
+![image_alt](https://github.com/AnuradhaNama/RAG-MULTI-MODEL-/blob/ef9f635938050e641b45eeba3958ce35b35bd872/project%20structure%20ragg%20t%20image.png)
 
-**config.py** - Stores API key, model names, paths, and modality thresholds.
-
-**embeddings.py** - Creates text embeddings and raw media embeddings using Gemini Embedding 2.
-
-**vector_store.py** - Stores and searches embeddings in ChromaDB using cosine similarity.
-
-**bm25_store.py** - Builds BM25 keyword index from text, captions, and descriptions.
-
-**hybrid.py** - Combines vector search and BM25 results using RRF.
-
-**reranker.py** - Adds entity-aware boosting after RRF.
-
-**ingestion.py** - Embeds and stores text/media into ChromaDB and BM25.
-
-**cold_start.py** - Searches Wikipedia, downloads text/media, embeds, stores, and updates BM25.
-
-**dedupe_store.py** - Prevents duplicate text/media storage using URL/hash tracking.
-
-**intent.py** - Detects whether query asks for text, image, audio, video, or mixed response.
-
-**response_router.py** - Converts final results into frontend response format.
-
-**evaluation.py** - Calculates retrieval and answer quality metrics after response generation.
-
-**logger.py** - Logs pipeline events into terminal and logs/pipeline.log.
-
-**script.js** - Sends frontend query to backend and displays text/media.
-
-**index.html** - Frontend page structure.
-
-**style.css** - Frontend UI styling.          
-
-
-## 4. Tech Stack
+# Technologies Used
 
 ## Backend
 
-Python
+- FastAPI
+- Python
 
-FastAPI
+## Embeddings
 
-Uvicorn
+- Gemini Embedding 2
 
-ChromaDB
+## LLM
 
-BM25Okapi
+- Gemini 2.5 Flash
 
-Wikipedia API
+## Vector Database
 
-Requests
+- ChromaDB
 
-FFmpeg
+## Keyword Search
 
-Gemini API
+- BM25
+
+## Cold Start Source
+
+- Wikipedia
+- Wikimedia Commons
+
+## Evaluation
+
+- RAGAS
 
 ## Frontend
 
-HTML
+- HTML
+- CSS
+- JavaScript
 
-CSS
+---
 
-JavaScript
+# Intent Detection
 
-## AI Models
+Intent detection identifies the type of information requested by the user.
 
+Supported intents:
+
+```text
+text
+image
+audio
+video
+```
+
+Examples:
+
+```text
+tell me about tiger
+→ text
+
+show tiger images
+→ image
+
+give me tiger audio
+→ audio
+
+show tiger video
+→ video
+```
+
+Intent detection determines:
+
+- retrieval strategy
+- modality filtering
+- response generation
+- evaluation workflow
+
+---
+
+# Embedding Workflow
+
+## Text
+
+Text chunks are embedded using:
+
+```text
 Gemini Embedding 2
+```
 
-Gemini 2.5 Flash
+Example:
 
+```text
+Tiger is the largest cat species...
+```
 
-## 5. What Backend Handles
+↓
 
-## Backend handles:
+```text
+Vector Embedding
+```
 
-Query receiving
+---
 
-Intent detection
+## Media
 
-Query embedding
+Media embeddings are created directly from:
 
-Vector search
+```text
+Image Files
 
-BM25 search
+Audio Files
 
-RRF merging
+Video Files
+```
 
-Entity reranking
+Raw media files are used for semantic retrieval.
 
-Final relevance gate
+Metadata is NOT used for embeddings.
 
-Cold start
+---
 
-Wikipedia scraping
+# Metadata Generation
 
-Media download
+Media metadata is generated using Gemini.
 
-Deduplication
+Generated metadata includes:
 
-Response routing
+### Images
 
-Evaluation logging
+```text
+Caption
+Description
+Objects
+Scene
+Concept
+```
 
+### Audio
 
-## 6. What LLM Handles
+```text
+Sound Type
+Speaker Information
+Topic
+Events
+Audio Summary
+```
 
-LLM is used for:
+### Video
 
-Generating text answers from retrieved context
+```text
+Scene Description
+Objects
+Actions
+Events
+Summary
+```
 
-Describing image/audio/video for BM25 keyword search
+Metadata is used only for:
 
-Evaluating final answer quality in evaluation.py
+- BM25 Search
+- Evaluation
+- Frontend Display
 
-LLM is not used for the main retrieval decision.
+Metadata is NOT used for semantic embeddings.
 
+---
 
-## 7. What Embedding Handles
+# Hybrid Search Workflow
 
-Gemini Embedding 2 creates embeddings for:
+The retrieval pipeline combines:
 
-text → text embedding
-image → raw image embedding
-audio → raw audio embedding
-video → raw video embedding
+```text
+Semantic Search
 
-All embeddings are stored in the same ChromaDB collection.
++
 
-## Important rule:
-Captions/descriptions are NOT used as semantic media embeddings.
-They are used only for BM25 keyword search and display support.
+Keyword Search
+```
 
+---
 
-## 8. Retrieval Scoring Workflow
+## Vector Search
 
-## Step 1: Vector Similarity Search
+Query embedding is searched in ChromaDB.
 
-Query is converted into one embedding vector.
+Similarity:
 
-query = "give me lion video"-> Gemini Embedding 2 -> query vector
+```text
+Cosine Similarity
+```
 
-ChromaDB compares query vector with stored vectors using cosine distance.
+Formula:
 
-Similarity is calculated as:
+```text
+Similarity = 1 - Distance
+```
 
-vector_score = 1 - cosine_distance
+Higher similarity means stronger semantic match.
 
-Higher score means more semantically similar.
+---
 
-## Step 2: BM25 Keyword Score
+## BM25 Search
 
-BM25 searches keyword text:
+BM25 performs keyword matching using:
 
-text chunks
+- text chunks
+- captions
+- descriptions
+- page titles
+- source topics
 
-captions
+---
 
-descriptions
+# Reciprocal Rank Fusion (RRF)
 
-page title
+Vector results and BM25 results are merged using:
 
-source topic
+```text
+RRF Score
 
-BM25 formula idea:
+=
 
-BM25 = TF × IDF × length normalization
+1 / (k + rank)
+```
 
 Where:
 
-TF = how often query word appears
-
-IDF = how rare/important word is
-
-length normalization = avoids favoring very long documents
-
-BM25 helps exact keyword matching.
-
-## Step 3: RRF Merge
-
-Vector search and BM25 return separate ranked lists.
-
-RRF combines them using:
-
-RRF score = 1 / (k + rank)
-
-In this project:
-
+```text
 k = 60
+```
 
-rank 1 = 1 / 61 = 0.01639
+Example:
 
-rank 2 = 1 / 62 = 0.01612
+```text
+Vector Rank = 1
 
-If an item appears in both vector and BM25 results, its RRF score increases.
+BM25 Rank = 2
 
-## Step 4: Entity Boosting
+RRF
 
-The system extracts important words from the query.
+=
 
-## Example:
+1/61 + 1/62
 
-give me lion video
+≈ 0.0325
+```
+
+---
+
+# Entity Boosting
+
+Important query entities are extracted.
+
+Example:
+
+```text
+give me tiger audio
+```
+
+Entity:
+
+```text
+tiger
+```
+
+If retrieved metadata contains:
+
+```text
+tiger
+```
+
+additional score boost is applied.
+
+Formula:
+
+```text
+Boost
+
+=
+
+Entity Match Count × 0.08
+```
+
+---
+
+# Confidence Normalization
+
+The final retrieval confidence is calculated using:
+
+```text
+Confidence
+
+=
+
+0.45 × Vector Score
+
++
+
+0.25 × RRF Score
+
++
+
+0.20 × Entity Match
+
++
+
+0.10 × Modality Match
+```
+
+Output Range:
+
+```text
+0.0 → 1.0
+```
+
+Examples:
+
+```text
+0.90 = Highly Relevant
+
+0.70 = Strong Match
+
+0.50 = Moderate Match
+
+0.20 = Weak Match
+```
+
+---
+
+# Threshold Logic
+
+Cold start decisions are based on confidence scores.
+
+Current thresholds:
+
+```text
+TEXT_CONFIDENCE_THRESHOLD  = 0.25
+
+IMAGE_CONFIDENCE_THRESHOLD = 0.30
+
+AUDIO_CONFIDENCE_THRESHOLD = 0.30
+
+VIDEO_CONFIDENCE_THRESHOLD = 0.30
+
+MIXED_CONFIDENCE_THRESHOLD = 0.30
+```
+
+Decision:
+
+```text
+Best Confidence
+
+>
+
+Threshold
+```
 
 ↓
 
-entity = lion
+```text
+Use Existing Data
+```
 
-If retrieved result contains lion in caption, description, page title, or source topic:
+Otherwise:
 
-entity_boost = match_count × 0.08
+```text
+Cold Start Triggered
+```
 
-## Final score becomes:
+---
 
-final_score = RRF score + entity_boost
+# Dynamic Cold Start
 
-## Example:
+If confidence is below threshold:
 
-RRF score = 0.032
-
-entity_boost = 0.08
-
-final_score = 0.112
-
-## 9. Cold Start Threshold Logic
-
-Cold start does not depend only on vector similarity.
-
-It depends on final score after:
-
-Vector search
-
-+ BM25 search
- 
-+ RRF merge
- 
-+ Entity reranking
-  
-+ Intent filtering
-  
-+ Final relevance gate
-
-Thresholds:
-
-TEXT_FINAL_THRESHOLD  = 0.07
-
-IMAGE_FINAL_THRESHOLD = 0.08
-
-AUDIO_FINAL_THRESHOLD = 0.08
-
-VIDEO_FINAL_THRESHOLD = 0.08
-
-MIXED_FINAL_THRESHOLD = 0.08
-
-If:
-
-final_score < threshold
-
-or required modality is missing, cold start triggers.
-
-## Example:
-
-User: give me lion video
-
-Final score = 0.016
-
-Video threshold = 0.08
+```text
+Wikipedia Search
+```
 
 ↓
 
-Cold start triggered
+```text
+Best Page Selection
+```
 
-## 10. Evaluation Metrics
+↓
 
-The evaluation system measures the quality of the final response generated by the multimodal RAG pipeline. Evaluation runs only after the final response is generated.
+```text
+Text Extraction
+```
 
-### **Pipeline Flow**
+↓
+
+```text
+Media Discovery
+```
+
+↓
+
+```text
+Embedding Generation
+```
+
+↓
+
+```text
+Store in ChromaDB
+```
+
+↓
+
+```text
+Store in BM25
+```
+
+↓
+
+```text
+Re-run Retrieval
+```
+
+---
+
+# Duplicate Prevention
+
+Duplicate content is avoided using:
+
+### Text Hash
+
+```text
+SHA256(text)
+```
+
+### File Hash
+
+```text
+SHA256(file)
+```
+
+### Media URL Tracking
+
+Previously ingested URLs are skipped.
+
+---
+
+# Response Routing
+
+## Text Intent
+
+Returns:
+
+```text
+Text Answer
+
++
+
+Related Images
+
++
+
+Related Audio
+
++
+
+Related Video
+```
+
+Limits:
+
+```text
+Images = 2
+
+Audio = 1
+
+Video = 1
+```
+
+---
+
+## Image Intent
+
+Returns:
+
+```text
+Images Only
+```
+
+---
+
+## Audio Intent
+
+Returns:
+
+```text
+Audio Only
+```
+
+---
+
+## Video Intent
+
+Returns:
+
+```text
+Video Only
+```
+
+---
+
+# Frontend Workflow
+
+Frontend sends:
+
+```json
+{
+  "query": "tell me about tiger"
+}
+```
+
+Backend returns:
+
+```json
+{
+  "type": "text",
+  "answer": "...",
+  "media": [...]
+}
+```
+
+Frontend dynamically renders:
+
+- Text
+- Images
+- Audio Players
+- Video Players
+
+based on response type.
+
+---
+
+# Evaluation Framework
+
+Evaluation runs AFTER response generation.
+
+Pipeline:
 
 ```text
 Retrieval
 
-→ RRF Merge
+↓
 
-→ Entity Reranking
+Response Generation
 
-→ Threshold Filtering
+↓
 
-→ Cold Start Decision
+Frontend Response
 
-→ Final Response Generation
+↓
 
-→ Evaluation
+Evaluation
 ```
 
-Evaluation is completely separate from retrieval and cold start logic.
+Evaluation never affects:
 
-Evaluation does **not** affect:
+- vector retrieval
+- BM25 retrieval
+- RRF ranking
+- confidence scores
+- thresholds
+- cold start
 
-* Vector Retrieval
+---
 
-* BM25 Retrieval
+# Text Evaluation (RAGAS)
 
-* RRF Merging
+Text responses use:
 
-* Entity Boosting
+## Answer Relevancy
 
-* Threshold Filtering
+Measures:
 
-* Cold Start Triggering
+```text
+Query
 
-* Frontend Response Display
+vs
 
-Cold start decisions use only retrieval scores and modality thresholds.
+Generated Answer
+```
 
-Evaluation metrics are logged only in backend logs and are not displayed in the frontend UI.
+---
 
-### **Example Backend Log**
+## Faithfulness
+
+Measures:
+
+```text
+Generated Answer
+
+vs
+
+Retrieved Context
+```
+
+Detects hallucination.
+
+---
+
+## Final Text Score
+
+```text
+Final Score
+
+=
+
+0.45 × Answer Relevancy
+
++
+
+0.40 × Faithfulness
+
++
+
+0.15 × Modality Score
+```
+
+---
+
+# Media Evaluation (RAGAS)
+
+Media evaluation uses:
+
+```text
+RAGAS Multimodal Relevance
+```
+
+Inputs:
+
+```text
+User Query
+
++
+
+Caption
+
++
+
+Description
+
++
+
+Page Title
+
++
+
+Source Topic
+```
+
+Example:
+
+```text
+Query:
+show tiger image
+
+Caption:
+Tiger in forest
+
+Description:
+Large Bengal tiger standing in jungle
+```
+
+RAGAS evaluates metadata relevance.
+
+---
+
+## Media Final Score
+
+```text
+Final Score
+
+=
+
+0.80 × Multimodal Relevance
+
++
+
+0.20 × Modality Score
+```
+
+---
+
+# Modality Score
+
+Checks:
+
+```text
+Requested Modality
+
+vs
+
+Returned Modality
+```
+
+Examples:
+
+```text
+Image Query → Image Response
+
+Audio Query → Audio Response
+
+Video Query → Video Response
+
+Text Query → Text Response
+```
+
+Scoring:
+
+```text
+Correct = 1.0
+
+Incorrect = 0.0
+```
+
+---
+
+# Example Evaluation Log
+
+Text:
 
 ```text
 Evaluation metrics | metrics={
+'ragas_answer_relevancy': 0.84,
+'ragas_faithfulness': 1.0,
+'modality_score': 1.0,
+'final_correctness_score': 0.93,
+'retrieved_count': 16,
+'response_type': 'text'
+}
+```
 
-  'context_precision': 0.62,
-  'retrieval_score_quality': 0.28,
-  'entity_coverage': 0.96,
-  'modality_score': 0.75,
-  'relevancy_score': 0.80,
-  'final_correctness_score': 0.713,
-  'retrieved_count': 5,
-  'response_type': 'text'
+Media:
+
+```text
+Evaluation metrics | metrics={
+'ragas_multimodal_relevance': 0.87,
+'modality_score': 1.0,
+'final_correctness_score': 0.90,
+'retrieved_count': 1,
+'response_type': 'audio'
 }
 ```
 
 ---
 
-## **Retrieval Score Quality**
+# Logging
 
-Retrieval Score Quality measures how strong the final retrieved results are based on their final retrieval scores.
-
-The system calculates scores after:
+All pipeline events are stored in:
 
 ```text
-
-Vector Search + BM25 + RRF + Entity Boosting + Threshold Filtering
+logs/pipeline.log
 ```
 
-### **Formula**
+Examples:
 
 ```text
+Intent detected
 
-average_score = sum(final_result_scores) / total_results
+Vector search completed
 
-retrieval_score_quality = average_score / 0.30
-```
+BM25 search completed
 
-The score is normalized between `0.0` and `1.0`.
+Cold start triggered
 
-This metric produces continuous scores such as:
+Response sent
 
-```text
-0.25, 0.46, 0.73
-```
-
-instead of only `0` or `1`.
-
----
-
-## **Entity Coverage**
-
-Entity Coverage checks how many important query entities appear inside the retrieved results.
-
-Intent words such as:
-
-```text
-
-image, audio, video, show, give, tell, explain
-```
-
-are removed before evaluation.
-
-### **Example**
-
-```text
-Query: tell me about tiger
-
-Entity: tiger
-```
-
-### **Formula**
-
-```text
-entity_coverage =
-
-matched_query_entities / total_query_entities
+Evaluation completed
 ```
 
 ---
 
-## **Context Precision**
+# Environment Variables
 
-Context Precision combines:
-
-* Entity Coverage
-
-* Retrieval Score Quality
-
-### **Formula**
-
-```text
-context_precision =
-
-(0.5 × entity_coverage)
-
-+
-
-(0.5 × retrieval_score_quality)
-```
-
-This metric evaluates both:
-
-* Query-topic matching
-
-* Retrieval confidence quality
-
----
-
-## **Modality Score**
-
-Modality Score checks whether the final response follows the expected response format for the detected intent.
-
-### **Text Query Response Format**
-
-```text
-text answer
-
-+ up to 2 images
-
-+ up to 1 audio
-
-+ up to 1 video
-```
-
-### **Text Query Scoring**
-
-```text
-text answer = 0.40
-
-images = 0.25
-
-audio = 0.175
-
-video = 0.175
-```
-
-This allows partial scores instead of only `0` or `1`.
-
-### **Image Query**
-
-```text
-modality_score =
-
-number_of_images_returned / 2
-```
-
-### **Audio Query**
-
-```text
-modality_score =
-
-number_of_audio_files_returned / 1
-```
-
-### **Video Query**
-
-```text
-modality_score =
-
-number_of_video_files_returned / 1
-```
-
-Frontend rules remain unchanged:
-
-```text
-image query → only images
-
-audio query → only audio
-
-video query → only video
-
-text query → text answer with related media
-```
-
----
-
-## **Relevancy Score**
-
-Relevancy Score is evaluated using Gemini 2.5 Flash.
-
-### **Text Query Evaluation**
-
-Gemini receives:
-
-```text
-
-user query
-
-+
-
-generated answer
-```
-
-### **Media Query Evaluation**
-
-Gemini evaluates relevance using only internal metadata:
-
-* caption
-
-* description
-
-* page title
-
-* source topic
-
-* modality
-
-This metadata is used only for evaluation and is never displayed in the frontend UI.
-
-### **Scoring Scale**
-
-```text
-0.0  = irrelevant
-
-0.25 = weakly related
-
-0.5  = partially relevant
-
-0.75 = mostly relevant
-
-1.0  = highly relevant
-```
-
----
-
-## **Final Correctness Score**
-
-Final Correctness Score combines:
-
-* Context Precision
-
-* Modality Score
-
-* Relevancy Score
-
-### **Formula**
-
-```text
-final_correctness_score =
-
-(0.4 × context_precision)
-+
-
-(0.3 × modality_score)
-
-+
-
-(0.3 × relevancy_score)
-```
-
-This final score represents the overall quality of the multimodal RAG pipeline response.
-
----
-
-## **Evaluation Design Principles**
-
-The evaluation system follows these principles:
-
-* Evaluation runs only after final response generation
-
-* Evaluation is independent from retrieval
-
-* Evaluation never controls cold start
-
-* Evaluation never changes retrieval ranking
-
-* Evaluation metrics are backend-only
-
-* Frontend never displays evaluation metrics
-
-* Media metadata can be used internally for evaluation
-
-* Media metadata is not displayed in frontend
-
-* Media-only queries do not generate LLM text answers
-
-* Text queries can return text plus related image/audio/video media
-
-
-## 11. Complete Architecture
-
-![image alt](https://github.com/NARASAPURAPUTEJASRI/multi-model-rag/blob/main/Rag_pipline_Image.jpeg)
-
-## 12. Frontend Behavior
-
-tell me about Taj Mahal
-
-→ text + 2 images + 1 audio + 1 video if available
-
-give me Taj Mahal images
-
-→ 2 images
-
-give me Taj Mahal audio
-
-→ only audio
-
-give me Taj Mahal video
-
-→ only video
-
-## 13. How to Run
-
-## Step 1: Install backend dependencies
-
-cd backend
-
-pip install -r requirements.txt
-
-## Step 2: Create .env
-
-Inside backend/.env:
-
-GEMINI_API_KEY=your_api_key_here
+```env
+GEMINI_API_KEY=
 
 CHROMA_PATH=./data/chroma_db
 
 MEDIA_DIR=./data/media
 
-SIMILARITY_THRESHOLD=0.25
+EMBEDDING_MODEL=models/gemini-embedding-2
 
-## Step 3: Start backend
+LLM_MODEL=gemini-2.5-flash
 
-cd backend
+TEXT_CONFIDENCE_THRESHOLD=0.25
 
-python -m uvicorn app.main:app --reload --port 8000
+IMAGE_CONFIDENCE_THRESHOLD=0.30
 
-Backend docs:
+AUDIO_CONFIDENCE_THRESHOLD=0.30
 
-http://127.0.0.1:8000/docs
+VIDEO_CONFIDENCE_THRESHOLD=0.30
 
-## Step 4: Start frontend
+MIXED_CONFIDENCE_THRESHOLD=0.30
 
-Open another terminal:
+RAGAS_DO_NOT_TRACK=true
+```
 
-cd frontend
+---
 
-python -m http.server 5500
+# Run Backend
+
+```bash
+python -m uvicorn app.main:app --reload
+```
+
+---
+
+# Run Frontend
 
 Open:
 
-http://localhost:5500/
+```text
+frontend/index.html
+```
 
-## 14. Important Debug Command
+or use:
 
-Check BM25 pickle
+```bash
+python -m http.server 5500
+```
 
-cd backend
+---
 
-python debug_bm25_pickle.py
+# Summary
 
-## 15. Summary
+This Multimodal RAG Pipeline supports:
 
-The system avoids returning irrelevant media by using final relevance validation. If local data is weak or missing, it dynamically fetches and stores new data from Wikipedia.
+- Text Retrieval
+- Image Retrieval
+- Audio Retrieval
+- Video Retrieval
+- Hybrid Search
+- Dynamic Cold Start
+- ChromaDB
+- BM25
+- Confidence Normalization
+- Entity Boosting
+- RAGAS Evaluation
+- Metadata-Based Multimodal Evaluation
+- Frontend Media Rendering
+- Duplicate Prevention
+- Wikipedia Knowledge Expansion
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+The system combines semantic retrieval, keyword retrieval, dynamic knowledge ingestion, and evaluation to provide accurate multimodal responses.
