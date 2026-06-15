@@ -19,11 +19,11 @@ The system retrieves relevant multimodal content using semantic embeddings and k
 
 # System Architecture
 
-![image_alt](https://github.com/AnuradhaNama/RAG-MULTI-MODEL-/blob/main/final%20ragg%20t%20image.png)
+![image_alt](https://github.com/NARASAPURAPUTEJASRI/customer-location-order-agent/blob/1fac9c02c76767c93d45f684fdd15525451404ad/Workflow.png)
 
 # Project Structure
 
-![image_alt](https://github.com/AnuradhaNama/RAG-MULTI-MODEL-/blob/ef9f635938050e641b45eeba3958ce35b35bd872/project%20structure%20ragg%20t%20image.png)
+![image_alt](https://github.com/NARASAPURAPUTEJASRI/customer-location-order-agent/blob/1fac9c02c76767c93d45f684fdd15525451404ad/Structure.png)
 
 # Technologies Used
 
