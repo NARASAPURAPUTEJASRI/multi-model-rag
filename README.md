@@ -23,7 +23,7 @@ The system retrieves relevant multimodal content using semantic embeddings and k
 
 # Project Structure
 
-![image_alt](https://github.com/NARASAPURAPUTEJASRI/customer-location-order-agent/blob/1fac9c02c76767c93d45f684fdd15525451404ad/Structure.png)
+![image_alt](https://github.com/NARASAPURAPUTEJASRI/multi-model-rag/blob/89f2ce53ac463e88e668881184c4adfd91cfa31b/project%20structure.png)
 
 # Technologies Used
 
